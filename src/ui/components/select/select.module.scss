@@ -1,0 +1,32 @@
+.selectbox {
+
+  border-radius: 16px;
+  overflow: hidden;
+  transition: var(--transition);
+  color: var(--white);
+  font-weight: 300;
+
+  &.open {
+    background-color: var(--dark);
+  }
+
+  &__icon {
+    font-size: 0.8em;
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    margin-top: 0.4em;
+  }
+
+  &__selected {
+    position: relative;
+  }
+
+  &__list {
+    padding: 8px;
+  }
+
+  &__item {
+    
+  }
+}

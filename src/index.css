@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply text-base p-4;
+  font-size: 14px;
+  background-color: var(--bg);
+}
+
+:root {
+  --transition: all 0.4s ease-in-out;
+
+  --white: #fff;
+  --bg: #e5e5e7;
+  --grey-l: #bcbcbc;
+}
