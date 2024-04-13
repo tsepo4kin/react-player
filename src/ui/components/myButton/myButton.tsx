@@ -1,25 +1,8 @@
 import { FC, PropsWithChildren } from 'react'
-import { Button, ButtonStyleTypes } from '@material-tailwind/react'
-import {
-	color,
-	size,
-	variant
-} from '@material-tailwind/react/types/components/button'
+import { Button } from '@material-tailwind/react'
+import { ButtonProps } from '@material-tailwind/react/components/Button'
 
-interface IButton extends ButtonStyleTypes {
-	onClick?: () => void
-	variant?: variant
-	size?: size
-	color?: color
-	loading?: boolean
-	disabled?: boolean
-	fullWidth?: boolean 
-	placeholder?: string
-	onPointerEnterCapture?: () => void,
-	onPointerLeaveCapture?: () => void
-}
-
-const MyButton: FC<PropsWithChildren<IButton>> = ({
+const MyButton: FC<PropsWithChildren<ButtonProps>> = ({
 	variant = 'filled',
 	size = 'md',
 	loading,
@@ -29,8 +12,7 @@ const MyButton: FC<PropsWithChildren<IButton>> = ({
 	children,
 	onClick,
 	placeholder,
-	onPointerEnterCapture,
-	onPointerLeaveCapture,
+	className
 }) => {
 	return (
 		<Button
@@ -42,8 +24,7 @@ const MyButton: FC<PropsWithChildren<IButton>> = ({
 			loading={loading}
 			onClick={onClick}
 			placeholder={placeholder}
-			onPointerEnterCapture={onPointerEnterCapture}
-			onPointerLeaveCapture={onPointerLeaveCapture}
+			className={className}
 		>
 			{children}
 		</Button>
@@ -51,4 +32,3 @@ const MyButton: FC<PropsWithChildren<IButton>> = ({
 }
 
 export default MyButton
-

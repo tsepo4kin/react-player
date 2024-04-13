@@ -1,34 +1,25 @@
 import { FC } from 'react'
 import { IconButton, IconButtonProps } from '@material-tailwind/react'
 
-interface IIconBtn extends IconButtonProps {
-	onPointerEnterCapture?: () => void
-	onPointerLeaveCapture?: () => void
-}
-
-const MyInputText: FC<IIconBtn> = ({
+const MyIconBtn: FC<IconButtonProps> = ({
 	variant,
 	size,
 	color,
 	children,
-	onChange,
-	onPointerEnterCapture,
-	onPointerLeaveCapture
+	className,
+	onClick
 }) => {
 	return (
 		<IconButton
-			className="text-base"
+			className={`text-base ${className}`}
 			variant={variant}
 			size={size}
 			color={color}
-			placeholder
-			onChange={onChange}
-			onPointerEnterCapture={onPointerEnterCapture}
-			onPointerLeaveCapture={onPointerLeaveCapture}
+			onClick={onClick}
 		>
 			{children}
 		</IconButton>
 	)
 }
 
-export default MyInputText
+export default MyIconBtn

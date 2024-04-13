@@ -1,21 +1,32 @@
-import MyIconBtn from '../../components/myIconBtn/myIconBtn'
+import { FC } from 'react'
+// import MyIconBtn from '../../components/myIconBtn/myIconBtn'
+import Player from '../player/player'
 
-const footerMenu = [
-	{ icon: 'fa-solid fa-gear' },
-	{ icon: 'fa-regular fa-circle-play' },
-	{ icon: 'fa-solid fa-music' }
-]
+// const footerMenu = [
+// 	{ icon: 'fa-solid fa-gear', href: '/settings' },
+// 	{ icon: 'fa-regular fa-circle-play', href: '/player' },
+// 	{ icon: 'fa-solid fa-music', href: '/library' },
+// 	{ icon: 'fa-solid fa-house', href: '/' }
+// ]
 
-const Footer = () => {
+interface IFooterProps {
+	currentTrack: MediaSource | null
+}
+
+const Footer: FC<IFooterProps> = ({ currentTrack }) => {
 	return (
-		<footer className="py-2 px-4">
-			<div className="flex">
-				{footerMenu.map((icon, idx) => (
-					<MyIconBtn variant="text" className="mx-2" key={idx} size="sm">
-						<i className={icon.icon}></i>
-					</MyIconBtn>
+		<footer className="w-full mb-auto py-2 px-4">
+			<Player currentTrack={currentTrack}></Player>
+			{/* <div className="w-full flex justify-center pt-2">
+				{footerMenu.map((menuItem, idx) => (
+					<a href={menuItem.href} key={idx}>
+						<MyIconBtn variant="text" className="mx-4" size="sm">
+							<i className={menuItem.icon}></i>
+						</MyIconBtn>
+					</a>
 				))}
-			</div>
+			</div> */}
+
 		</footer>
 	)
 }

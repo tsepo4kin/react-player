@@ -1,18 +1,10 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Header from '../widgets/header/header'
-import Home from '../pages/home/home'
-import Library from '../pages/library/library'
-import Settings from '../pages/settings/settings'
-import Player from '../widgets/player/player'
 import { ThemeProvider } from '@material-tailwind/react'
 import Footer from '../widgets/footer/footer'
-
-const router = createBrowserRouter([
-	{ path: '/', element: <Home />, errorElement: <div>404</div> },
-	{ path: '/library', element: <Library /> },
-	{ path: '/player', element: <Player /> },
-	{ path: '/settings', element: <Settings /> }
-])
+import { useState } from 'react'
+import AudioItem from '../widgets/audioItem/audioItem'
+import { useSelector } from 'react-redux'
+import SearchAudios from '../widgets/searchAudio/SearchAudios'
 
 const App = () => {
 	const customTheme = {
@@ -22,15 +14,35 @@ const App = () => {
 			styles: {}
 		}
 	}
+
+	const songs = useSelector((state: any) => state.songs)
+
+	const [currentTrack, setCurrentTrack] = useState<MediaSource | null>(null)
+
 	return (
 		<ThemeProvider value={customTheme}>
 			<div className="app__wrapper">
 				<div className="app__container">
 					<Header></Header>
 
-					<RouterProvider router={router} />
+					<SearchAudios />
 
-					<Footer></Footer>
+					<div className="h-full w-full px-2 py-2 overflow-y-scroll">
+						<div className="px-4">
+							{songs.map((song: unknown, idx: number) => (
+								<AudioItem
+									className="py-2"
+									song={song}
+									key={idx}
+									idx={idx}
+									canDelete={true}
+									onClick={() => setCurrentTrack(songs[idx])}
+								/>
+							))}
+						</div>
+					</div>
+
+					<Footer currentTrack={currentTrack}></Footer>
 				</div>
 			</div>
 		</ThemeProvider>

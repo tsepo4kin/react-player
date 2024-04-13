@@ -28,3 +28,5 @@ export default {
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+
+i couldn't connect to the service api. maybe it's down, or cobalt got blocked. try again, but if error persists, check the <a class=\"text-backdrop link\" href=\"https://status.cobalt.tools/\" target=\"_blank\">status page</a> or <a class=\"text-backdrop link\" href=\"https://github.com/wukko/cobalt\" target=\"_blank\">create an issue on github</a>

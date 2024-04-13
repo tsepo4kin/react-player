@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 body {
-	@apply text-base p-4;
+	@apply text-base;
 	font-size: 14px;
 	background-color: var(--bg);
+	height: 100vh;
+	width: 100vw;
 }
 
 :root {
@@ -14,6 +16,10 @@ body {
 	--white: #fff;
 	--bg: #e5e5e7;
 	--grey-l: #bcbcbc;
+}
+
+#root {
+	height: 100%;
 }
 
 .app__wrapper {
@@ -25,6 +31,8 @@ body {
 	justify-content: center;
 	color: var(--color-primary);
 	background-color: var(--bg-color);
+	padding: 35px 0;
+	box-sizing: border-box;
 }
 
 .app__container {
@@ -41,6 +49,7 @@ body {
 	z-index: 2;
 	width: 100%;
 	background: transparent;
+	box-sizing: border-box;
 }
 
 @media (min-width: 700px) {
@@ -50,10 +59,10 @@ body {
 	.app__container {
 		width: 700px;
 		overflow: hidden;
-		height: calc(100% - 96px);
+		min-height: calc(100% - 96px);
 		border-radius: var(--padding);
 		background-color: var(--bg-color);
-		box-shadow: 0 0px 0.6px rgba(0, 0, 0, 0.024),
+		box-shadow: 0.4px 0.4px 0.6px rgba(0, 0, 0, 0.024),
 			0 0px 1.3px rgba(0, 0, 0, 0.031), 0 0px 2.2px rgba(0, 0, 0, 0.035),
 			0 0px 3.3px rgba(0, 0, 0, 0.037), 0 0px 4.8px rgba(0, 0, 0, 0.04),
 			0 0px 6.7px rgba(0, 0, 0, 0.041), 0 0px 9.6px rgba(0, 0, 0, 0.043),
