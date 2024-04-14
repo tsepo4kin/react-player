@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
-import {
-  songReducer,
-} from './reducers';
+import { songReducer } from './reducers';
+import { trackReducer } from './reducers';
 
 export const reducers = combineReducers({
-  songs: songReducer,
+	playData: trackReducer,
+	songs: songReducer
 });
 
 export * from './actions';

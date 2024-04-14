@@ -1,2 +1,4 @@
 export const T_ADD_SONGS = 'ADD_SONGS';
 export const T_DELETE_SONGS = 'DELETE_SONGS';
+export const T_SET_CURRENT_TRACK = 'SET_CURRENT_TRACK';
+export const T_CLEAR_CURRENT_TRACK = 'CLEAR_CURRENT_TRACK';
