@@ -19,9 +19,13 @@ const SearchPage = () => {
 
 	return (
 		<div className="py-2 px-4 h-full w-full">
+			{/* <div className="pb-2"> */}
+			{/* <MySelect placeholder="search fro" options={['Youtube', 'Soundcloud']} /> */}
+			{/* </div> */}
 			<div className="pb-2">
 				<MyInputText
 					value={searchString}
+					placeholder="song name or artist name"
 					onChange={e => {
 						setSearchString(e.target.value);
 					}}
