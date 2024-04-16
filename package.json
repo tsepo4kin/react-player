@@ -1,6 +1,7 @@
 {
 	"name": "react-from-scratch",
 	"private": true,
+	"homepage": "https://tsepo4kin.github.io/PWA-player",
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
