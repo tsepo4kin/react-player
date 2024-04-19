@@ -6,7 +6,7 @@ import { createStore } from 'redux';
 import { reducers } from './redux/index.ts';
 import DataStorage from './utils/indexedDb.ts';
 import { Provider } from 'react-redux';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 
 (async () => {
 	try {
@@ -32,9 +32,9 @@ import { BrowserRouter } from 'react-router-dom';
 		ReactDOM.createRoot(document.getElementById('root')!).render(
 			<React.StrictMode>
 				<Provider store={store}>
-					<BrowserRouter>
+					<HashRouter>
 						<App />
-					</BrowserRouter>
+					</HashRouter>
 				</Provider>
 			</React.StrictMode>
 		);
