@@ -38,12 +38,12 @@ const vitePWA = VitePWA({
 		start_url: '.',
 		icons: [
 			{
-				src: 'assets/img/android-chrome-192x192.png',
+				src: 'img/android-chrome-192x192.png',
 				sizes: '192x192',
 				type: 'image/png',
 			},
 			{
-				src: 'assets/img/android-chrome-512x512.png',
+				src: 'img/android-chrome-512x512.png',
 				sizes: '512x512',
 				type: 'image/png',
 			}

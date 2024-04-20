@@ -1,5 +1,5 @@
 {
-	"name": "react-from-scratch",
+	"name": "pwa-player",
 	"private": true,
 	"homepage": "https://tsepo4kin.github.io/PWA-player",
 	"version": "0.0.0",
@@ -8,7 +8,8 @@
 		"dev": "vite",
 		"build": "tsc && vite build",
 		"lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"host": "vite --host"
 	},
 	"dependencies": {
 		"@material-tailwind/react": "^2.1.9",

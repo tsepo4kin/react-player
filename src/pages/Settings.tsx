@@ -9,7 +9,7 @@ const Settings = () => {
 
 				<a
 					className="text-sm flex items-center mt-4"
-					href="https://github.com/tsepo4kin/react-player"
+					href="https://github.com/tsepo4kin/pwa-player"
 				>
 					<i className="fa-brands fa-github text-2xl"></i>
 					<span className="ml-2">GitHub source code</span>
