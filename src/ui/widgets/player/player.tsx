@@ -1,45 +1,51 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import AudioItem from '../audioItem/audioItem';
+import { useSelector } from 'react-redux';
 
-interface IPlayer {
-	currentTrack: MediaSource | null;
-}
 
-const Player: FC<IPlayer> = ({ currentTrack }) => {
+const Player: FC = () => {
+	const currentTrack = useSelector((state: any) => state.playData?.track);
 	const [isPlayed, setIsPlayed] = useState(false);
 	const [range, setRange] = useState(0);
 
-	const audio = useRef<HTMLAudioElement | null>(null);
+	const audioRef = useRef<HTMLAudioElement | null>(new Audio());
 
-	const playPause = () => {
-		if (isPlayed) {
-			audio.current?.pause();
-			setIsPlayed(false);
-		} else {
-			audio.current?.play();
-			setIsPlayed(true);
+	const playPause = async () => {
+		try {
+			if (isPlayed) {
+				await audioRef.current?.pause();
+				setIsPlayed(false);
+			} else {
+				await audioRef.current?.play();
+				setIsPlayed(true);
+			}
+		} catch (e) {
+			console.log(e)
 		}
 	};
 
 	useEffect(() => {
-		if (currentTrack) {
-			audio.current!.src = URL.createObjectURL(currentTrack);
+		if (audioRef.current!.src) {
+			URL.revokeObjectURL(audioRef.current!.src)	
+		}
+		if (currentTrack?.file) {
+			audioRef.current!.src = URL.createObjectURL(currentTrack?.file);
 		}
 	}, [currentTrack]);
 
 	const updateTime = () => {
 		const currentTime =
-			(100 * audio.current!.currentTime) / audio.current!.duration || 0;
+			(100 * audioRef.current!.currentTime) / audioRef.current!.duration || 0;
 
 		setRange(Math.round(currentTime));
 	};
 
 	const rewind = (timeString: string) => {
 		setRange(parseFloat(timeString));
-		const range = (audio.current!.duration / 100) * parseFloat(timeString);
+		const range = (audioRef.current!.duration / 100) * parseFloat(timeString);
 		if (!isNaN(range)) {
-			audio.current!.currentTime = range;
+			audioRef.current!.currentTime = range;
 		}
 	};
 
@@ -57,13 +63,13 @@ const Player: FC<IPlayer> = ({ currentTrack }) => {
 				onChange={e => rewind(e.target.value)}
 			/>
 
-			{audio.current && (
+			{audioRef.current && (
 				<span>
-					{!isNaN(audio.current!.currentTime) &&
-						Math.round(audio.current.currentTime)}{' '}
+					{!isNaN(audioRef.current!.currentTime) &&
+						Math.round(audioRef.current.currentTime)}{' '}
 					/{' '}
-					{!isNaN(audio.current!.duration) &&
-						Math.round(audio.current!.duration)}
+					{!isNaN(audioRef.current!.duration) &&
+						Math.round(audioRef.current!.duration)}
 				</span>
 			)}
 
@@ -80,7 +86,7 @@ const Player: FC<IPlayer> = ({ currentTrack }) => {
 			<audio
 				hidden
 				controls
-				ref={audio}
+				ref={audioRef}
 				// onEnded={() => onSongEnd()}
 				onTimeUpdate={() => updateTime()}
 			></audio>

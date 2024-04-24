@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 import { ADD_SONGS } from '../../../redux'
 import MyIconBtn from '../../components/myIconBtn/myIconBtn'
+import { blobToArrayBuffer } from '../../../utils/indexedDb'
 
 export interface IHeaderProps {}
 
@@ -14,6 +15,16 @@ const Header: FC<PropsWithChildren<IHeaderProps>> = () => {
 			const filePicker: HTMLInputElement = input.current!
 			filePicker.click()
 		}
+	}
+
+	const onInputFile = async (files) => {
+		const res = [];
+		for (let file of files) {
+			const arrayBuffer = await blobToArrayBuffer(file)
+			const trackInfo = {file: arrayBuffer, name: file.name}
+			res.push(trackInfo)
+		}
+		dispatch(ADD_SONGS(res))
 	}
 
 	return (
@@ -30,7 +41,7 @@ const Header: FC<PropsWithChildren<IHeaderProps>> = () => {
 				ref={input}
 				accept="audio/mp3,audio/wav,audio/ogg"
 				onChange={e => {
-					dispatch(ADD_SONGS(e.target.files))
+					onInputFile(e.target.files)
 				}}
 			/>
 		</header>

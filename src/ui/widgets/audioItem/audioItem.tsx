@@ -3,6 +3,7 @@ import MyIconBtn from '../../components/myIconBtn/myIconBtn'
 import { useDispatch } from 'react-redux'
 import { ADD_SONGS, DELETE_SONG } from '../../../redux/actions'
 import { getDownloadLink, downloadAudioFromLink } from '../../../api/api'
+import { blobToArrayBuffer } from '../../../utils/indexedDb'
 
 interface IAudioItem {
 	song: any
@@ -31,7 +32,9 @@ const AudioItem: FC<IAudioItem> = ({
 			const file = new File([audioBlob], song.title, {
 				type: 'audio/mp3'
 			})
-			dispatch(ADD_SONGS([file]))
+			const arrayBuffer = await blobToArrayBuffer(file)
+			const trackInfo = {file: arrayBuffer, name: song.title}
+			dispatch(ADD_SONGS([trackInfo]))
 		}
 	}
 
@@ -56,7 +59,6 @@ const AudioItem: FC<IAudioItem> = ({
 						variant="outlined"
 						onClick={e => {
 							e.stopPropagation()
-							console.log(song)
 							dispatch(DELETE_SONG(idx))
 						}}
 					>

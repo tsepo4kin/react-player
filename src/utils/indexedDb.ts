@@ -18,3 +18,18 @@ export default class DataStorage {
     return localforage.removeItem(key, callback);
   };
 }
+
+export function blobToArrayBuffer(blob: Blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener('loadend', (_) => {
+      resolve(reader.result);
+    });
+    reader.addEventListener('error', reject);
+    reader.readAsArrayBuffer(blob);
+  });
+}
+
+export function arrayBufferToBlob(buffer: ArrayBuffer, type: string) {
+  return new Blob([buffer], {type: type});
+}

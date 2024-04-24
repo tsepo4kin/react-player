@@ -1,7 +1,6 @@
 import { FC } from 'react';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import Player from '../player/player';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 const footerMenu = [
@@ -13,12 +12,11 @@ const footerMenu = [
 ];
 
 const Footer: FC = () => {
-	const currentTrack = useSelector((state: any) => state.playData?.track);
 	const navigate = useNavigate();
 
 	return (
 		<footer className="w-full mb-auto py-2 px-4">
-			<Player currentTrack={currentTrack}></Player>
+			<Player></Player>
 			<div className="w-full flex justify-center pt-2">
 				{footerMenu.map((menuItem, idx) => (
 					<MyIconBtn
