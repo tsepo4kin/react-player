@@ -2,12 +2,14 @@ import { FC, useEffect, useRef, useState } from 'react';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import AudioItem from '../audioItem/audioItem';
 import { useSelector } from 'react-redux';
-
+import MySlider from '../../components/mySlider/mySlider';
+import Timeline from './timeline';
 
 const Player: FC = () => {
 	const currentTrack = useSelector((state: any) => state.playData?.track);
 	const [isPlayed, setIsPlayed] = useState(false);
-	const [range, setRange] = useState(0);
+	const [audioRange, setAudioRange] = useState(0);
+	const [volumeRange, setVolumeRange] = useState(0.5);
 
 	const audioRef = useRef<HTMLAudioElement | null>(new Audio());
 
@@ -21,13 +23,13 @@ const Player: FC = () => {
 				setIsPlayed(true);
 			}
 		} catch (e) {
-			console.log(e)
+			console.log(e);
 		}
 	};
 
 	useEffect(() => {
 		if (audioRef.current!.src) {
-			URL.revokeObjectURL(audioRef.current!.src)	
+			URL.revokeObjectURL(audioRef.current!.src);
 		}
 		if (currentTrack?.file) {
 			audioRef.current!.src = URL.createObjectURL(currentTrack?.file);
@@ -38,56 +40,84 @@ const Player: FC = () => {
 		const currentTime =
 			(100 * audioRef.current!.currentTime) / audioRef.current!.duration || 0;
 
-		setRange(Math.round(currentTime));
+		setAudioRange(Math.round(currentTime));
 	};
 
 	const rewind = (timeString: string) => {
-		setRange(parseFloat(timeString));
+		setAudioRange(parseFloat(timeString));
 		const range = (audioRef.current!.duration / 100) * parseFloat(timeString);
 		if (!isNaN(range)) {
 			audioRef.current!.currentTime = range;
 		}
 	};
 
+	const onVolumeChange = (volumeString: string) => {
+		const volume = parseFloat(volumeString) / 100;
+		setVolumeRange(volume);
+		audioRef.current!.volume = volume;
+	};
+
+	const onNext = () => {
+		console.log('next');
+	};
+
+	const onPrev = () => {
+		console.log('prev');
+	};
+
+	const onSongEnd = () => {
+		setIsPlayed(false);
+	};
+
 	return (
 		<div className="border border-gray-400 rounded py-2 px-2">
 			{Boolean(currentTrack) && <AudioItem song={currentTrack} />}
 
-			<input
-				className="w-full"
-				type="range"
-				min={0}
-				max={100}
-				step={0.01}
-				value={range}
+			<Timeline
+				duration={audioRef.current!.duration}
+				currenttime={audioRef.current!.currentTime}
+				disabled={!currentTrack}
+				value={audioRange}
 				onChange={e => rewind(e.target.value)}
 			/>
 
-			{audioRef.current && (
-				<span>
-					{!isNaN(audioRef.current!.currentTime) &&
-						Math.round(audioRef.current.currentTime)}{' '}
-					/{' '}
-					{!isNaN(audioRef.current!.duration) &&
-						Math.round(audioRef.current!.duration)}
-				</span>
-			)}
-
 			<div className="flex justify-center">
-				<MyIconBtn size="sm" variant="outlined" onClick={playPause}>
+				<div className="mr-auto w-20"></div>
+
+				<MyIconBtn size="sm" variant="outlined" onClick={onPrev}>
+					<i className="fa-solid fa-backward" />
+				</MyIconBtn>
+
+				<MyIconBtn
+					className="mx-2"
+					size="sm"
+					variant="outlined"
+					onClick={playPause}
+				>
 					{isPlayed ? (
 						<i className="fa-solid fa-pause" />
 					) : (
 						<i className="fa-solid fa-play" />
 					)}
 				</MyIconBtn>
+
+				<MyIconBtn size="sm" variant="outlined" onClick={onNext}>
+					<i className="fa-solid fa-forward" />
+				</MyIconBtn>
+
+				<MySlider
+					disabled={false}
+					className="ml-auto w-20 cursor-pointer"
+					value={volumeRange * 100}
+					onChange={e => onVolumeChange(e.target.value)}
+				/>
 			</div>
 
 			<audio
 				hidden
 				controls
 				ref={audioRef}
-				// onEnded={() => onSongEnd()}
+				onEnded={() => onSongEnd()}
 				onTimeUpdate={() => updateTime()}
 			></audio>
 		</div>

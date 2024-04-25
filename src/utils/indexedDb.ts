@@ -33,3 +33,25 @@ export function blobToArrayBuffer(blob: Blob) {
 export function arrayBufferToBlob(buffer: ArrayBuffer, type: string) {
   return new Blob([buffer], {type: type});
 }
+
+export const formatTime = (ms?: number): string => {
+  if (typeof ms !== 'number' || !Number.isFinite(ms) || ms < 0) {
+    return '--:--'
+  }
+
+  const hours = Math.floor(ms / 60 / 60)
+  const minutes = Math.floor((ms % 3600) / 60)
+  const seconds = Math.floor((ms % 3600) % 60)
+  const time: (number | string)[] = [
+    getNumberWithLeadingZero(minutes),
+    getNumberWithLeadingZero(seconds),
+  ]
+
+  if (hours) {
+    time.unshift(hours)
+  }
+
+  return time.join(':')
+}
+
+const getNumberWithLeadingZero = (n: number) => `${n < 10 ? '0' : ''}${n}`
