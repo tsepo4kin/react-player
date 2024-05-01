@@ -48,12 +48,9 @@ const AudioItem: FC<IAudioItem> = ({
 						: 'https://i.pinimg.com/474x/d7/80/99/d780998902c6e43eee27b1cfc1469384.jpg'
 				}
 			/>
-			<div className="flex flex-col w-full ">
-				<p className="truncate">{(song && song.name) || song.title}</p>
-				<p className="truncate">Song author</p>
-			</div>
+			<p className="truncate">{(song && song.name) || song.title}</p>
 			{canDelete && idx !== undefined && (
-				<div>
+				<div className='ml-auto'>
 					<MyIconBtn
 						size="sm"
 						variant="outlined"
@@ -68,7 +65,7 @@ const AudioItem: FC<IAudioItem> = ({
 			)}
 
 			{canDownload && (
-				<div>
+				<div className='ml-auto'>
 					<MyIconBtn
 						size="sm"
 						variant="outlined"

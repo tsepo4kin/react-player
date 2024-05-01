@@ -10,6 +10,7 @@ const Player: FC = () => {
 	const [isPlayed, setIsPlayed] = useState(false);
 	const [audioRange, setAudioRange] = useState(0);
 	const [volumeRange, setVolumeRange] = useState(0.5);
+	const [loop, setLoop] = useState(false);
 
 	const audioRef = useRef<HTMLAudioElement | null>(new Audio());
 
@@ -66,8 +67,19 @@ const Player: FC = () => {
 	};
 
 	const onSongEnd = () => {
-		setIsPlayed(false);
+		if (loop) {
+			audioRef.current?.play();
+		} else {
+			onNext();
+		}
 	};
+
+	const repeat = () => {
+		if (audioRef.current) {
+			setLoop(!loop);
+			audioRef.current.loop = loop;
+		}
+	}
 
 	return (
 		<div className="border border-gray-400 rounded py-2 px-2">
@@ -82,7 +94,13 @@ const Player: FC = () => {
 			/>
 
 			<div className="flex justify-center">
-				<div className="mr-auto w-20"></div>
+				<div className="mr-auto w-1/3">
+					<MyIconBtn size="sm" variant='outlined' onClick={repeat}>
+						<i className="fa-solid fa-repeat">
+							{Boolean(loop) && 1}
+						</i>
+					</MyIconBtn>
+				</div>
 
 				<MyIconBtn size="sm" variant="outlined" onClick={onPrev}>
 					<i className="fa-solid fa-backward" />
@@ -106,8 +124,8 @@ const Player: FC = () => {
 				</MyIconBtn>
 
 				<MySlider
-					disabled={false}
-					className="ml-auto w-20 cursor-pointer"
+					disabled={!currentTrack}
+					className="ml-auto w-1/3 cursor-pointer"
 					value={volumeRange * 100}
 					onChange={e => onVolumeChange(e.target.value)}
 				/>

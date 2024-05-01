@@ -16,7 +16,7 @@ const mySlider: FC<ISliderProps> = ({
 	return (
 		<input
 			disabled={disabled}
-			className={[className, 'w-full cursor-pointer'].join(' ')}
+			className={[className, 'cursor-pointer'].join(' ')}
 			type="range"
 			min={0}
 			max={100}
