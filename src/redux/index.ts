@@ -4,7 +4,7 @@ import { songReducer } from './reducers';
 import { trackReducer } from './reducers';
 
 export const reducers = combineReducers({
-	playData: trackReducer,
+	currentAudio: trackReducer,
 	songs: songReducer
 });
 

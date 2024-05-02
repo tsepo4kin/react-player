@@ -24,7 +24,7 @@ const AudioItem: FC<IAudioItem> = ({
 }) => {
 	const dispatch = useDispatch();
 
-	const downloadAndSave = async () => {
+	const saveInDatabase = async () => {
 		const ytLink = song.url.replace('/watch?v=', '');
 		const metaData = await getDownloadLink(ytLink);
 		const audioBlob = await downloadAudioFromLink(metaData.url);
@@ -38,6 +38,10 @@ const AudioItem: FC<IAudioItem> = ({
 		}
 	};
 
+	// const saveOnDevice = () => {
+
+	// }
+
 	return (
 		<div className={`flex items-center ${className}`} onClick={onClick}>
 			<img
@@ -50,7 +54,7 @@ const AudioItem: FC<IAudioItem> = ({
 			/>
 			<p className="truncate">{(song && song.name) || song.title}</p>
 			{canDelete && idx !== undefined && (
-				<div className='ml-auto'>
+				<div className="ml-auto">
 					<MyIconBtn
 						size="sm"
 						variant="outlined"
@@ -61,17 +65,28 @@ const AudioItem: FC<IAudioItem> = ({
 					>
 						<i className="fa-solid fa-trash-can"></i>
 					</MyIconBtn>
+
+					{/* <MyIconBtn
+						size="sm"
+						variant="outlined"
+						onClick={e => {
+							e.stopPropagation();
+							saveOnDevice();
+						}}
+					>
+						<i className="fa-solid fa-floppy-disk"></i>
+					</MyIconBtn> */}
 				</div>
 			)}
 
 			{canDownload && (
-				<div className='ml-auto'>
+				<div className="ml-auto">
 					<MyIconBtn
 						size="sm"
 						variant="outlined"
 						onClick={e => {
 							e.stopPropagation();
-							downloadAndSave();
+							saveInDatabase();
 						}}
 					>
 						<i className="fa-solid fa-add"></i>

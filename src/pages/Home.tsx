@@ -1,22 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
 import AudioItem from '../ui/widgets/audioItem/audioItem';
-import { SET_CURRENT_TRACK } from '../redux';
-import { arrayBufferToBlob } from '../utils/indexedDb';
-import { useState } from 'react';
+import { SET_SELECTED_AUDIO_ID } from '../redux';
 
 const Home = () => {
 	const songs = useSelector((state: any) => state.songs);
-	const [audioIdx, setAudioIdx] = useState<number | null>(null);
+	const audioIdx = useSelector(
+		(state: any) => state.currentAudio?.selectedAudioId
+	);
 	const dispatch = useDispatch();
 
-	const onSelectCurrentTrack = (track: any, idx: number) => {
+	const onSelectCurrentTrack = (idx: number) => {
 		if (audioIdx === null || idx !== audioIdx) {
-			setAudioIdx(idx);
-			const currentTrack: any = {};
-			const blob = arrayBufferToBlob(track.file, 'audio/mp3');
-			currentTrack.file = blob;
-			currentTrack.name = track.name;
-			dispatch(SET_CURRENT_TRACK(currentTrack));
+			dispatch(SET_SELECTED_AUDIO_ID(idx));
 		}
 	};
 
@@ -34,7 +29,7 @@ const Home = () => {
 						key={idx}
 						idx={idx}
 						canDelete={true}
-						onClick={() => onSelectCurrentTrack(songs[idx], idx)}
+						onClick={() => onSelectCurrentTrack(idx)}
 					/>
 				))}
 			</div>
