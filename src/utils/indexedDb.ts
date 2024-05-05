@@ -54,4 +54,16 @@ export const formatTime = (ms?: number): string => {
   return time.join(':')
 }
 
+export function downloadFile(href: string, fileName?: string) {
+  const a = document.createElement('a');
+  a.href = href;
+  a.download = fileName ?? 'download';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(href);
+  }, 0);
+}
+
 const getNumberWithLeadingZero = (n: number) => `${n < 10 ? '0' : ''}${n}`

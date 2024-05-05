@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Home from '../../pages/Home';
 import SearchPage from '../../pages/SearchPage';
-import Player from '../../pages/Player';
 import Settings from '../../pages/Settings';
 import Header from '../widgets/header/header';
 import Footer from '../widgets/footer/footer';
@@ -13,10 +12,10 @@ const App = () => {
 			element: <Home />,
 			errorElement: <div>404</div>
 		},
-		{
-			path: '/player',
-			element: <Player />
-		},
+		// {
+		// 	path: '/player',
+		// 	element: <Player />
+		// },
 		{
 			path: '/search',
 			element: <SearchPage />

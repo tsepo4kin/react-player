@@ -12,6 +12,8 @@ const Player: FC = () => {
 		(state: any) => state.currentAudio?.selectedAudioId
 	);
 	const songs = useSelector((state: any) => state.songs);
+	const [isIphone, setIsIphone] = useState(false);
+	const [isMuted, setIsMuted] = useState(false);
 	const [isPlayed, setIsPlayed] = useState(false);
 	const [audioRange, setAudioRange] = useState(0);
 	const [volumeRange, setVolumeRange] = useState(0.5);
@@ -38,6 +40,37 @@ const Player: FC = () => {
 		}
 	};
 
+	const mobileMediaSession = () => {
+		if ('mediaSession' in navigator) {
+			navigator.mediaSession.setActionHandler('previoustrack', () => {
+				// TODO: single click - play from start, double click - play prev audio
+				onPrev();
+			});
+			navigator.mediaSession.setActionHandler('nexttrack', () => {
+				onNext();
+			});
+			navigator.mediaSession.setActionHandler('play', () => {
+				audioRef.current!.play();
+				setIsPlayed(true);
+			});
+			navigator.mediaSession.setActionHandler('pause', () => {
+				audioRef.current!.pause();
+				setIsPlayed(false);
+			});
+			navigator.mediaSession.setActionHandler('seekto', details => {
+				if (details.seekTime) {
+					audioRef.current!.currentTime = details.seekTime;
+				}
+			});
+		}
+	};
+
+	useEffect(() => {
+		if (navigator.userAgent.includes('iPhone')) {
+			setIsIphone(true);
+		}
+	});
+
 	useEffect(() => {
 		if (audioRef.current!.src) {
 			URL.revokeObjectURL(audioRef.current!.src);
@@ -54,10 +87,20 @@ const Player: FC = () => {
 			URL.revokeObjectURL(audioRef.current!.src);
 		}
 		if (currentAudio) {
-			audioRef.current!.src = URL.createObjectURL(currentAudio.file);
-			setIsPlayed(true);
-			audioRef.current!.play();
+			try {
+				audioRef.current!.src = URL.createObjectURL(currentAudio.file);
+				setIsPlayed(true);
+				audioRef.current!.play();
+				audioRef.current!.title = currentAudio.name;
+				audioRef.current!.addEventListener('playing', mobileMediaSession);
+			} catch (e) {
+				console.log(e);
+			}
 		}
+
+		return () => {
+			audioRef.current!.removeEventListener('playing', mobileMediaSession);
+		};
 	}, [currentAudio]);
 
 	const updateTime = () => {
@@ -111,6 +154,16 @@ const Player: FC = () => {
 		}
 	};
 
+	const onMute = () => {
+		if (isMuted) {
+			audioRef.current!.muted = false;
+			setIsMuted(false);
+		} else {
+			audioRef.current!.muted = true;
+			setIsMuted(true);
+		}
+	};
+
 	return (
 		<div className="border border-gray-400 rounded py-2 px-2">
 			{Boolean(currentAudio) && <AudioItem song={currentAudio} />}
@@ -155,12 +208,29 @@ const Player: FC = () => {
 					<i className="fa-solid fa-forward" />
 				</MyIconBtn>
 
-				<MySlider
-					disabled={!currentAudio}
-					className="ml-auto w-1/3 cursor-pointer"
-					value={volumeRange * 100}
-					onChange={e => onVolumeChange(e.target.value)}
-				/>
+				<div className="ml-auto w-1/3">
+					{isIphone ? (
+						<MyIconBtn
+							className="ml-auto block"
+							size="sm"
+							variant="outlined"
+							onClick={onMute}
+						>
+							{isMuted ? (
+								<i className="fa-solid fa-volume-xmark"></i>
+							) : (
+								<i className="fa-solid fa-volume-high"></i>
+							)}
+						</MyIconBtn>
+					) : (
+						<MySlider
+							disabled={!currentAudio}
+							className="w-full cursor-pointer"
+							value={volumeRange * 100}
+							onChange={e => onVolumeChange(e.target.value)}
+						/>
+					)}
+				</div>
 			</div>
 
 			<audio
@@ -169,7 +239,7 @@ const Player: FC = () => {
 				ref={audioRef}
 				onEnded={() => onSongEnd()}
 				onTimeUpdate={() => updateTime()}
-			></audio>
+			/>
 		</div>
 	);
 };

@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const footerMenu = [
 	{ icon: 'fa-solid fa-gear', href: '/settings' },
-	{ icon: 'fa-regular fa-circle-play', href: '/player' },
+	// { icon: 'fa-regular fa-circle-play', href: '/player' },
 	{ icon: 'fa-solid fa-magnifying-glass', href: '/search' },
 	{ icon: 'fa-solid fa-house', href: '/' }
 ];
@@ -22,7 +22,7 @@ const Footer: FC = () => {
 					<MyIconBtn
 						onClick={() => navigate(menuItem.href)}
 						key={idx}
-						variant={location.pathname === menuItem.href ? 'filled' :'text'}
+						variant={location.pathname === menuItem.href ? 'filled' : 'text'}
 						className="mx-4"
 						size="lg"
 					>

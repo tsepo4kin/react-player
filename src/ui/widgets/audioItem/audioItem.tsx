@@ -1,9 +1,14 @@
 import { FC } from 'react';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ADD_SONGS, DELETE_SONG } from '../../../redux/actions';
 import { getDownloadLink, downloadAudioFromLink } from '../../../api/api';
-import { blobToArrayBuffer } from '../../../utils/indexedDb';
+import {
+	arrayBufferToBlob,
+	blobToArrayBuffer,
+	downloadFile
+} from '../../../utils/indexedDb';
+// import Progress from '@material-tailwind/react/components/Progress';
 
 interface IAudioItem {
 	song: any;
@@ -23,7 +28,15 @@ const AudioItem: FC<IAudioItem> = ({
 	onClick
 }) => {
 	const dispatch = useDispatch();
+	const songs = useSelector((state: any) => state.songs);
+	// const [loadProgress, setLoadProgress] = useState(0);
 
+	// const progress = ({ loaded, total }) => {
+	// 	console.log(Math.round((loaded / total) * 100), loaded, total);
+	// 	setLoadProgress(Math.round((loaded / total) * 100));
+	// };
+
+	// TODO - вынести отсюда, чтобы можно было переключаться между страницами при загрузке
 	const saveInDatabase = async () => {
 		const ytLink = song.url.replace('/watch?v=', '');
 		const metaData = await getDownloadLink(ytLink);
@@ -38,9 +51,13 @@ const AudioItem: FC<IAudioItem> = ({
 		}
 	};
 
-	// const saveOnDevice = () => {
-
-	// }
+	const saveOnDevice = (idx: number) => {
+		if (songs[idx]) {
+			const audio = songs[idx];
+			const blob = arrayBufferToBlob(audio.file, 'audio/mp3');
+			downloadFile(window.URL.createObjectURL(blob), `${audio.name}.mp3`);
+		}
+	};
 
 	return (
 		<div className={`flex items-center ${className}`} onClick={onClick}>
@@ -54,7 +71,7 @@ const AudioItem: FC<IAudioItem> = ({
 			/>
 			<p className="truncate">{(song && song.name) || song.title}</p>
 			{canDelete && idx !== undefined && (
-				<div className="ml-auto">
+				<div className="ml-auto min-w-20">
 					<MyIconBtn
 						size="sm"
 						variant="outlined"
@@ -66,16 +83,17 @@ const AudioItem: FC<IAudioItem> = ({
 						<i className="fa-solid fa-trash-can"></i>
 					</MyIconBtn>
 
-					{/* <MyIconBtn
+					<MyIconBtn
+						className="ml-2"
 						size="sm"
 						variant="outlined"
 						onClick={e => {
 							e.stopPropagation();
-							saveOnDevice();
+							saveOnDevice(idx);
 						}}
 					>
 						<i className="fa-solid fa-floppy-disk"></i>
-					</MyIconBtn> */}
+					</MyIconBtn>
 				</div>
 			)}
 
@@ -93,6 +111,13 @@ const AudioItem: FC<IAudioItem> = ({
 					</MyIconBtn>
 				</div>
 			)}
+			{/* {loadProgress} */}
+			{/* <Progress
+				value={loadProgress}
+				variant="filled"
+				size="lg"
+				className="border border-gray-900/10 bg-gray-900/5 p-1"
+			/> */}
 		</div>
 	);
 };
