@@ -17,6 +17,11 @@ interface IAudioItem {
 	canDelete?: boolean;
 	canDownload?: boolean;
 	onClick?: () => void;
+	draggable?: boolean;
+	onDragStart?: (e: unknown) => void;
+	onDragEnd?: (e: unknown) => void;
+	onDragOver?: (e: unknown) => void;
+	onDrop?: () => void;
 }
 
 const AudioItem: FC<IAudioItem> = ({
@@ -25,7 +30,12 @@ const AudioItem: FC<IAudioItem> = ({
 	className,
 	canDelete = false,
 	canDownload = false,
-	onClick
+	onClick,
+	draggable,
+	onDragEnd,
+	onDragStart,
+	onDrop,
+	onDragOver
 }) => {
 	const dispatch = useDispatch();
 	const songs = useSelector((state: any) => state.songs);
@@ -60,7 +70,17 @@ const AudioItem: FC<IAudioItem> = ({
 	};
 
 	return (
-		<div className={`flex items-center ${className}`} onClick={onClick}>
+		<div
+			className={`flex items-center ${className}`}
+			onClick={onClick}
+			draggable={draggable}
+			onDragStart={onDragStart}
+			onDragEnd={onDragEnd}
+			onDragOver={onDragOver}
+			onDrop={onDrop}
+			onTouchStart={onDragStart}
+			onTouchEnd={onDragEnd}
+		>
 			<img
 				className="rounded h-12 w-12 mr-2"
 				src={
