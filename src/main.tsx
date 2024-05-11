@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom/client';
 import App from './ui/app/App.tsx';
 import './index.css';
 import { createStore } from 'redux';
-import { reducers } from './redux/index.ts';
 import DataStorage from './utils/indexedDb.ts';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+import { reducers } from './infrastructure/redux/index.ts';
 
 (async () => {
 	try {

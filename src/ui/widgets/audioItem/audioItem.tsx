@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import { useDispatch, useSelector } from 'react-redux';
-import { ADD_SONGS, DELETE_SONG } from '../../../redux/actions';
 import { getDownloadLink, downloadAudioFromLink } from '../../../api/api';
 import {
 	arrayBufferToBlob,
 	blobToArrayBuffer,
 	downloadFile
 } from '../../../utils/indexedDb';
+import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
 // import Progress from '@material-tailwind/react/components/Progress';
 
 interface IAudioItem {

@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import Home from '../../pages/Home';
-import SearchPage from '../../pages/SearchPage';
-import Settings from '../../pages/Settings';
+import Home from '../pages/Home';
+import SearchPage from '../pages/SearchPage';
+import Settings from '../pages/Settings';
 import Header from '../widgets/header/header';
 import Footer from '../widgets/footer/footer';
 

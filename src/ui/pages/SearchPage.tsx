@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { searchFromYoutube } from '../api/api';
-import MyInputText from '../ui/components/myInputText/myInputText';
-import AudioItem from '../ui/widgets/audioItem/audioItem';
-import useDebounce from '../ui/hooks/useDebounce';
+import { searchFromYoutube } from '../../api/api';
+import MyInputText from '../components/myInputText/myInputText';
+import AudioItem from '../widgets/audioItem/audioItem';
+import useDebounce from '../hooks/useDebounce';
 
 const SearchPage = () => {
 	const [searchString, setSearchString] = useState('');

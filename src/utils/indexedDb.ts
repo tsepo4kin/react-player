@@ -19,11 +19,11 @@ export default class DataStorage {
   };
 }
 
-export function blobToArrayBuffer(blob: Blob) {
+export function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.addEventListener('loadend', (_) => {
-      resolve(reader.result);
+      resolve(reader.result as ArrayBuffer);
     });
     reader.addEventListener('error', reject);
     reader.readAsArrayBuffer(blob);
