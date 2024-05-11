@@ -1,25 +1,26 @@
 import { useState } from 'react';
-import { searchFromYoutube } from '../../api/api';
+import { searchFromYoutube } from '../../infrastructure/api/api';
 import MyInputText from '../components/myInputText/myInputText';
 import AudioItem from '../widgets/audioItem/audioItem';
 import useDebounce from '../hooks/useDebounce';
+import { AudioSearchQuery } from '../../domain/actions/audio.actions';
 
 const SearchPage = () => {
 	const [searchString, setSearchString] = useState('');
 	const [songsData, setSongsData] = useState<Array<any>>([]);
 
 	const search = (searchString: string) => {
-		searchFromYoutube(searchString)
+		searchFromYoutube(new AudioSearchQuery(searchString))
 			.then(res => setSongsData(res.items.slice(0, 6)))
 			.catch(e => console.log(e));
 	};
 
 	const debouncedSearch = useDebounce(search, 500);
 
-	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setSearchString(e.target.value);
-		if (searchString) {
-			debouncedSearch(searchString);
+	const onChange = (string: string) => {
+		setSearchString(string);
+		if (string) {
+			debouncedSearch(string);
 		} else {
 			setSongsData([]);
 		}
@@ -34,7 +35,7 @@ const SearchPage = () => {
 				<MyInputText
 					value={searchString}
 					placeholder="song name or artist name"
-					onChange={onChange}
+					onChange={e => onChange(e.target.value)}
 				></MyInputText>
 			</div>
 
