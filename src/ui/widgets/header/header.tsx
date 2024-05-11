@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
-import { blobToArrayBuffer } from '../../../utils/indexedDb';
+import { blobToArrayBuffer } from '../../../utils/utils';
 import { ADD_SONGS } from '../../../infrastructure/redux';
 
 export interface IHeaderProps {}

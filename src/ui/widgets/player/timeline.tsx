@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import MySlider from '../../components/mySlider/mySlider';
-import { formatTime } from '../../../utils/indexedDb';
+import { formatTime } from '../../../utils/utils';
 
 interface ITimlineProps {
 	disabled: boolean;

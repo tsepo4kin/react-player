@@ -7,9 +7,9 @@ import Timeline from './timeline';
 import {
 	createMediaSession,
 	usePlayer
-} from '../../../infrastructure/controllers/player.controller';
+} from '../../../infrastructure/controllers/player.controllers';
 import { SET_SELECTED_AUDIO_ID } from '../../../infrastructure/redux';
-import { arrayBufferToBlob } from '../../../utils/indexedDb';
+import { arrayBufferToBlob } from '../../../utils/utils';
 import { LoopState } from '../../../domain/models/player';
 
 const Player: FC = () => {

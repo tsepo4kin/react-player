@@ -1,13 +1,13 @@
 import { FC } from 'react';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDownloadLink, downloadAudioFromLink } from '../../../api/api';
 import {
 	arrayBufferToBlob,
 	blobToArrayBuffer,
 	downloadFile
-} from '../../../utils/indexedDb';
+} from '../../../utils/utils';
 import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
+import { AudioItemController } from '../../../infrastructure/controllers/audioItem.controllers';
 // import Progress from '@material-tailwind/react/components/Progress';
 
 interface IAudioItem {
@@ -48,13 +48,8 @@ const AudioItem: FC<IAudioItem> = ({
 
 	// TODO - вынести отсюда, чтобы можно было переключаться между страницами при загрузке
 	const saveInDatabase = async () => {
-		const ytLink = song.url.replace('/watch?v=', '');
-		const metaData = await getDownloadLink(ytLink);
-		const audioBlob = await downloadAudioFromLink(metaData.url);
-		if (audioBlob) {
-			const file = new File([audioBlob], song.title, {
-				type: 'audio/mp3'
-			});
+		const file = await AudioItemController.getBlobFromUrl(song.url)
+		if (file) {
 			const arrayBuffer = await blobToArrayBuffer(file);
 			const trackInfo = { file: arrayBuffer, name: song.title };
 			dispatch(ADD_SONGS([trackInfo]));

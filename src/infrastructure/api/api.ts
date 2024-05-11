@@ -1,10 +1,17 @@
-export async function getDownloadLink(youtubeId: string) {
-	const streamUrl = 'https://youtu.be/' + youtubeId;
+import {
+	AudioDownloadQuery,
+	AudioMetadataQuery,
+	AudioSearchQuery
+} from '../../domain/actions/audio.actions';
+
+export async function getDownloadLink(
+	query: AudioMetadataQuery
+): Promise<unknown> {
 	const result = await fetch('https://co.wuk.sh/api/json', {
 		method: 'POST',
 		headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
 		body: JSON.stringify({
-			url: streamUrl,
+			url: `https://youtu.be/${query.youtubeId}`,
 			isAudioOnly: true,
 			filenamePattern: 'basic'
 		})
@@ -14,11 +21,11 @@ export async function getDownloadLink(youtubeId: string) {
 	return result;
 }
 
-export async function downloadAudioFromLink(
-	url: string
+export async function downloadAudioFromURL(
+	query: AudioDownloadQuery
 	// progress?: (info: unknown) => void
-) {
-	const result = await fetch(url)
+): Promise<Blob | void> {
+	const result = await fetch(query.url)
 		.then(r => r.blob())
 		.catch(e => console.log(e));
 	return result;
@@ -49,9 +56,9 @@ export async function downloadAudioFromLink(
 	// return blob;
 }
 
-export async function searchFromYoutube(searchString: string) {
+export async function searchFromYoutube(query: AudioSearchQuery) {
 	const result = await fetch(
-		`https://pipedapi.kavin.rocks/search?q=${searchString}&filter=all`
+		`https://pipedapi.kavin.rocks/search?q=${query.searchString}&filter=all`
 	)
 		.then(r => r.json())
 		.catch(e => console.log(e));

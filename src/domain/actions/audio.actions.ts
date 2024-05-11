@@ -20,6 +20,14 @@ export abstract class AuidoActions {
 	// public abstract setAudioTag(audioId: UniqueId): void;
 }
 
-export class FetchAudio {
+export class AudioSearchQuery {
   constructor(public searchString: AudioName) {}
+}
+
+export class AudioDownloadQuery {
+	constructor(public url: string) {}
+}
+
+export class AudioMetadataQuery {
+	constructor(public youtubeId: string) {}
 }
