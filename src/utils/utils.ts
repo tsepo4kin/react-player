@@ -20,14 +20,16 @@ export const formatTime = (ms?: number): string => {
 	return time.join(':');
 };
 
-export function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
-	return new Promise((resolve, reject) => {
+export function blobToArrayBuffer(src: Blob | File): Promise<ArrayBuffer> {
+	return new Promise<ArrayBuffer>((resolve, reject) => {
 		const reader = new FileReader();
-		reader.addEventListener('loadend', _ => {
+		reader.onloadend = function () {
 			resolve(reader.result as ArrayBuffer);
-		});
-		reader.addEventListener('error', reject);
-		reader.readAsArrayBuffer(blob);
+    };
+    reader.onerror = function () {
+      reject();
+    }
+		reader.readAsArrayBuffer(src);
 	});
 }
 

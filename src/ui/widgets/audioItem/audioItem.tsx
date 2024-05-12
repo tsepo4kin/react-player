@@ -8,6 +8,8 @@ import {
 } from '../../../utils/utils';
 import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
 import { AudioItemController } from '../../../infrastructure/controllers/audioItem.controllers';
+import showNotification from '../../components/myToast/myToast';
+import { ToastType } from '../../../infrastructure/controllers/notification.controllers';
 // import Progress from '@material-tailwind/react/components/Progress';
 
 interface IAudioItem {
@@ -46,13 +48,23 @@ const AudioItem: FC<IAudioItem> = ({
 	// 	setLoadProgress(Math.round((loaded / total) * 100));
 	// };
 
-	// TODO - вынести отсюда, чтобы можно было переключаться между страницами при загрузке
 	const saveInDatabase = async () => {
-		const file = await AudioItemController.getBlobFromUrl(song.url)
-		if (file) {
-			const arrayBuffer = await blobToArrayBuffer(file);
-			const trackInfo = { file: arrayBuffer, name: song.title };
-			dispatch(ADD_SONGS([trackInfo]));
+		try {
+			const file = await AudioItemController.getBlobFromUrl(song.url);
+			if (file) {
+				const arrayBuffer = await blobToArrayBuffer(file);
+				const trackInfo = { file: arrayBuffer, name: song.title };
+				dispatch(ADD_SONGS([trackInfo]));
+			}
+			showNotification({
+				type: ToastType.Success,
+				text: 'Загрузка успешно завершена'
+			});
+		} catch (err) {
+			showNotification({
+				type: ToastType.Error,
+				text: 'Ошибка загрузки аудио файла'
+			});
 		}
 	};
 

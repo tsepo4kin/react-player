@@ -29,6 +29,7 @@ const App = () => {
 	return (
 		<div className="app__wrapper">
 			<div className="app__container">
+				<div id="toasted__container" className="absolute w-full z-10"></div>
 				<Header></Header>
 
 				<Routes>
