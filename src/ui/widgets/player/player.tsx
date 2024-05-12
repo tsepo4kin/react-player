@@ -121,7 +121,7 @@ const Player: FC = () => {
 	return (
 		<div className="border border-gray-400 rounded py-2 px-2">
 			{Boolean(playerState.audioElement) && (
-				<AudioItem song={playerState.audioElement} />
+				<AudioItem hideButtons={true} song={playerState.audioElement} />
 			)}
 
 			<Timeline

@@ -1,8 +1,8 @@
 import { FC, PropsWithChildren, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import { blobToArrayBuffer } from '../../../utils/utils';
 import { ADD_SONGS } from '../../../infrastructure/redux';
+import MyMenu from '../../components/myMenu/myMenu';
 
 export interface IHeaderProps {}
 
@@ -32,10 +32,11 @@ const Header: FC<PropsWithChildren<IHeaderProps>> = () => {
 	return (
 		<header className="px-2 py-2 w-full">
 			<div className="flex justify-end">
-				<MyIconBtn size="sm" variant="outlined" onClick={addSongs}>
-					<i className="fa-solid fa-upload"></i>
-				</MyIconBtn>
+				<MyMenu items={[{ text: 'Импорт', onClick: addSongs }]}>
+					<i className="fa-solid fa-ellipsis-vertical"></i>
+				</MyMenu>
 			</div>
+
 			<input
 				hidden
 				multiple

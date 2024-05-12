@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	arrayBufferToBlob,
@@ -10,7 +9,7 @@ import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
 import { AudioItemController } from '../../../infrastructure/controllers/audioItem.controllers';
 import showNotification from '../../components/myToast/myToast';
 import { ToastType } from '../../../infrastructure/controllers/notification.controllers';
-// import Progress from '@material-tailwind/react/components/Progress';
+import MyMenu from '../../components/myMenu/myMenu';
 
 interface IAudioItem {
 	song: any;
@@ -18,6 +17,7 @@ interface IAudioItem {
 	className?: string;
 	canDelete?: boolean;
 	canDownload?: boolean;
+	hideButtons?: boolean;
 	onClick?: () => void;
 	draggable?: boolean;
 	onDragStart?: (e: unknown) => void;
@@ -32,6 +32,7 @@ const AudioItem: FC<IAudioItem> = ({
 	className,
 	canDelete = false,
 	canDownload = false,
+	hideButtons = false,
 	onClick,
 	draggable,
 	onDragEnd,
@@ -41,9 +42,34 @@ const AudioItem: FC<IAudioItem> = ({
 }) => {
 	const dispatch = useDispatch();
 	const songs = useSelector((state: any) => state.songs);
+	const menuItems = [
+		{
+			text: 'Удалить',
+			disabled: !(canDelete && idx !== undefined),
+			onClick: () => {
+				dispatch(DELETE_SONG(idx));
+			}
+		},
+		{
+			text: 'Добавить',
+			disabled: !canDownload,
+			onClick: () => {
+				saveInDatabase();
+			}
+		},
+		{
+			text: 'Скачать mp3',
+			disabled: !(canDelete && idx !== undefined),
+			onClick: () => {
+				if (idx) {
+					saveOnDevice(idx);
+				}
+			}
+		}
+	];
 	// const [loadProgress, setLoadProgress] = useState(0);
 
-	// const progress = ({ loaded, total }) => {
+	// const progress = (loaded: number, total: number) => {
 	// 	console.log(Math.round((loaded / total) * 100), loaded, total);
 	// 	setLoadProgress(Math.round((loaded / total) * 100));
 	// };
@@ -65,6 +91,8 @@ const AudioItem: FC<IAudioItem> = ({
 				type: ToastType.Error,
 				text: 'Ошибка загрузки аудио файла'
 			});
+		} finally {
+			// setTimeout(() => setLoadProgress(0), 3000);
 		}
 	};
 
@@ -78,7 +106,7 @@ const AudioItem: FC<IAudioItem> = ({
 
 	return (
 		<div
-			className={`flex items-center ${className}`}
+			className={`flex flex-col items-center ${className}`}
 			onClick={onClick}
 			draggable={draggable}
 			onDragStart={onDragStart}
@@ -88,63 +116,28 @@ const AudioItem: FC<IAudioItem> = ({
 			onTouchStart={onDragStart}
 			onTouchEnd={onDragEnd}
 		>
-			<img
-				className="rounded h-12 w-12 mr-2"
-				src={
-					song.thumbnail
-						? song.thumbnail
-						: 'https://i.pinimg.com/474x/d7/80/99/d780998902c6e43eee27b1cfc1469384.jpg'
-				}
-			/>
-			<p className="truncate">{(song && song.name) || song.title}</p>
-			{canDelete && idx !== undefined && (
-				<div className="ml-auto min-w-20">
-					<MyIconBtn
-						size="sm"
-						variant="outlined"
-						onClick={e => {
-							e.stopPropagation();
-							dispatch(DELETE_SONG(idx));
-						}}
-					>
-						<i className="fa-solid fa-trash-can"></i>
-					</MyIconBtn>
-
-					<MyIconBtn
-						className="ml-2"
-						size="sm"
-						variant="outlined"
-						onClick={e => {
-							e.stopPropagation();
-							saveOnDevice(idx);
-						}}
-					>
-						<i className="fa-solid fa-floppy-disk"></i>
-					</MyIconBtn>
+			<div className="flex items-center w-full">
+				<img
+					className="rounded h-12 w-12 mr-2"
+					src={
+						song.thumbnail
+							? song.thumbnail
+							: 'https://i.pinimg.com/474x/d7/80/99/d780998902c6e43eee27b1cfc1469384.jpg'
+					}
+				/>
+				<p className="truncate">{(song && song.name) || song.title}</p>
+				<div className="ml-auto" onClick={e => e.stopPropagation()}>
+					{!hideButtons && (
+						<MyMenu items={menuItems}>
+							<i className="fa-solid fa-ellipsis-vertical"></i>
+						</MyMenu>
+					)}
 				</div>
-			)}
-
-			{canDownload && (
-				<div className="ml-auto">
-					<MyIconBtn
-						size="sm"
-						variant="outlined"
-						onClick={e => {
-							e.stopPropagation();
-							saveInDatabase();
-						}}
-					>
-						<i className="fa-solid fa-add"></i>
-					</MyIconBtn>
-				</div>
-			)}
+			</div>
 			{/* {loadProgress} */}
-			{/* <Progress
-				value={loadProgress}
-				variant="filled"
-				size="lg"
-				className="border border-gray-900/10 bg-gray-900/5 p-1"
-			/> */}
+			{/* {canDownload && Boolean(loadProgress) && (
+				<MyProgress className="w-full my-2" size="sm" value={loadProgress} />
+			)} */}
 		</div>
 	);
 };
