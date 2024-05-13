@@ -18,6 +18,7 @@ interface IAudioItem {
 	canDelete?: boolean;
 	canDownload?: boolean;
 	hideButtons?: boolean;
+	isActive?: boolean;
 	onClick?: () => void;
 	draggable?: boolean;
 	onDragStart?: (e: unknown) => void;
@@ -33,6 +34,7 @@ const AudioItem: FC<IAudioItem> = ({
 	canDelete = false,
 	canDownload = false,
 	hideButtons = false,
+	isActive = false,
 	onClick,
 	draggable,
 	onDragEnd,
@@ -125,6 +127,11 @@ const AudioItem: FC<IAudioItem> = ({
 							: 'https://i.pinimg.com/474x/d7/80/99/d780998902c6e43eee27b1cfc1469384.jpg'
 					}
 				/>
+				{isActive && (
+					<span className="absolute animate-pulse text-5xl h-12 w-12 mr-2 text-center">
+						<i className="fa-solid fa-play"></i>
+					</span>
+				)}
 				<p className="truncate">{(song && song.name) || song.title}</p>
 				<div className="ml-auto" onClick={e => e.stopPropagation()}>
 					{!hideButtons && (

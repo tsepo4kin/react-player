@@ -54,9 +54,10 @@ const Home = () => {
 					<AudioItem
 						className={
 							idx === audioIdx
-								? 'border border-gray-600 rounded-lg py-2 px-2'
+								? 'bg-slate-500/25 rounded-lg py-2 px-2'
 								: 'py-2 px-2'
 						}
+						isActive={idx === audioIdx}
 						song={song}
 						key={idx}
 						idx={idx}
