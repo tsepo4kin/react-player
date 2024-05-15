@@ -1,15 +1,13 @@
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	arrayBufferToBlob,
 	blobToArrayBuffer,
-	downloadFile
 } from '../../../utils/utils';
 import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
-import { AudioItemController } from '../../../infrastructure/controllers/audioItem.controllers';
 import showNotification from '../../components/myToast/myToast';
 import { ToastType } from '../../../infrastructure/controllers/notification.controllers';
 import MyMenu from '../../components/myMenu/myMenu';
+import { audioService } from '../../../infrastructure/controllers/audioItem.controllers';
 
 interface IAudioItem {
 	song: any;
@@ -69,16 +67,11 @@ const AudioItem: FC<IAudioItem> = ({
 			}
 		}
 	];
-	// const [loadProgress, setLoadProgress] = useState(0);
-
-	// const progress = (loaded: number, total: number) => {
-	// 	console.log(Math.round((loaded / total) * 100), loaded, total);
-	// 	setLoadProgress(Math.round((loaded / total) * 100));
-	// };
 
 	const saveInDatabase = async () => {
 		try {
-			const file = await AudioItemController.getBlobFromUrl(song.url);
+			const file = await audioService.getBlobFromUrl(song.url);
+
 			if (file) {
 				const arrayBuffer = await blobToArrayBuffer(file);
 				const trackInfo = { file: arrayBuffer, name: song.title };
@@ -93,16 +86,13 @@ const AudioItem: FC<IAudioItem> = ({
 				type: ToastType.Error,
 				text: 'Ошибка загрузки аудио файла'
 			});
-		} finally {
-			// setTimeout(() => setLoadProgress(0), 3000);
 		}
 	};
 
 	const saveOnDevice = (idx: number) => {
 		if (songs[idx]) {
 			const audio = songs[idx];
-			const blob = arrayBufferToBlob(audio.file, 'audio/mp3');
-			downloadFile(window.URL.createObjectURL(blob), `${audio.name}.mp3`);
+			audioService.download(audio);
 		}
 	};
 

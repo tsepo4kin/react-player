@@ -1,17 +1,18 @@
 import { useState } from 'react';
-import { searchFromYoutube } from '../../infrastructure/api/api';
 import MyInputText from '../components/myInputText/myInputText';
 import AudioItem from '../widgets/audioItem/audioItem';
 import useDebounce from '../hooks/useDebounce';
-import { AudioSearchQuery } from '../../domain/actions/audio.actions';
+import { audioService } from '../../infrastructure/controllers/audioItem.controllers';
+import { ISearchedAudio } from '../../domain/models/audio';
 
 const SearchPage = () => {
 	const [searchString, setSearchString] = useState('');
-	const [songsData, setSongsData] = useState<Array<any>>([]);
+	const [songsData, setSongsData] = useState<Array<ISearchedAudio>>([]);
 
 	const search = (searchString: string) => {
-		searchFromYoutube(new AudioSearchQuery(searchString))
-			.then(res => setSongsData(res.items.slice(0, 6)))
+		// TODO: проверить - чета дохуя запросов
+		audioService.searchAudio(searchString)
+			.then(res => setSongsData(res.slice(0, 6)))
 			.catch(e => console.log(e));
 	};
 

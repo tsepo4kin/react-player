@@ -12,10 +12,6 @@ const App = () => {
 			element: <Home />,
 			errorElement: <div>404</div>
 		},
-		// {
-		// 	path: '/player',
-		// 	element: <Player />
-		// },
 		{
 			path: '/search',
 			element: <SearchPage />

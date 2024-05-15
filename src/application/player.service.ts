@@ -1,5 +1,5 @@
 import { PlayerActions } from '../domain/actions/player.actions';
-import { IPlayer, LoopState, PlayerVolume } from '../domain/models/player';
+import { IPlayer, LoopState } from '../domain/models/player';
 
 export class PlayerService extends PlayerActions {
 	constructor(playerData: IPlayer) {
@@ -50,7 +50,8 @@ export class PlayerService extends PlayerActions {
 		this.playerData.audioElement.loop = state === LoopState.LoopOne;
 	}
 
-	public changeVolume(volume: PlayerVolume): void {
+	public changeVolume(volumeString: string): void {
+		const volume = parseFloat(volumeString) / 100;
 		if (!this.playerData.audioElement) return;
 
 		this.playerData.volume = volume;

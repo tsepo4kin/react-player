@@ -1,4 +1,4 @@
-import { IPlayer, LoopState, PlayerVolume } from '../models/player';
+import { IPlayer, LoopState } from '../models/player';
 
 export abstract class PlayerActions {
 	public abstract playPause(setPlaying?: boolean): void;
@@ -7,7 +7,7 @@ export abstract class PlayerActions {
 
 	public abstract setLoopState(state: LoopState): void;
 
-	public abstract changeVolume(volume: PlayerVolume): void;
+	public abstract changeVolume(volumeString: string): void;
 
 	public abstract setAudioElement(auidoElement: HTMLAudioElement): void;
 

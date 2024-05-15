@@ -90,8 +90,7 @@ const Player: FC = () => {
 	};
 
 	const onVolumeChange = (volumeString: string) => {
-		const volume = parseFloat(volumeString) / 100;
-		playerController.changeVolume(volume);
+		playerController.changeVolume(volumeString);
 		setPlayerState({ ...playerController.getPlayerData() });
 	};
 

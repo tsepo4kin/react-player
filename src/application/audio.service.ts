@@ -1,28 +1,61 @@
-// import { AuidoActions } from "../domain/actions/audio.actions";
-// import { IAudio, AudioName } from "../domain/models/audio";
+import { AudioDownloadQuery, AudioMetadataQuery, AudioSearchQuery } from '../domain/actions/audio.actions';
+import {
+	AudioName,
+	IAudioMetadataResponse,
+	ISearchedAudio,
+	ISearchedAudiosResult
+} from '../domain/models/audio';
+import { arrayBufferToBlob, downloadFile } from '../utils/utils';
+import { IHttpClient } from './httpClient';
 
-// export class AudioService extends AuidoActions {
-//   public async getAuidos(): Promise<Array<IAudio>> {
-//     return [];
-//   }
+export class AudioService {
+	constructor(
+    private readonly httpClient: IHttpClient, // IHttpClient<Namespace>
+	) {}
 
-//   public async getCurrentAudio(audioId: UniqueId): Promise<IAudio> { 
-//     return null;
-//   };
+	public async searchAudio(
+		searchString: AudioName
+	): Promise<Array<ISearchedAudio>> {
+		const result = await this.httpClient.request<
+			AudioSearchQuery,
+			ISearchedAudiosResult
+		>(new AudioSearchQuery(searchString));
+		return result.items.filter(this.filterAudioFoo);
+	}
 
-//   public setCurrentAudio(audioId: UniqueId): void {
-    
-//   };
+	public async getBlobFromUrl(url: string): Promise<Blob | void> {
+		const youtubeId = url.replace('/watch?v=', '');
+    const metaData = await this.httpClient.request<AudioMetadataQuery, IAudioMetadataResponse>(new AudioMetadataQuery(youtubeId));
 
-//   public searchAudio(searchString: AudioName): void {
-    
-//   };
+    const audioBlob = await this.httpClient.request<AudioDownloadQuery, Blob>(new AudioDownloadQuery(metaData.url));
 
-//   public addAudio(audio: IAudio): void {
-    
-//   };
+		if (audioBlob) {
+			const file = new File([audioBlob], '', {
+				type: 'audio/mp3'
+			});
+			return file;
+		}
+  }
+  
+  public download(audio: {file: ArrayBuffer, name: string}) {
+    const blob = arrayBufferToBlob(audio.file, 'audio/mp3');
+    downloadFile(window.URL.createObjectURL(blob), `${audio.name}.mp3`);
+  }
 
-//   public deleteAudio(audioId: UniqueId): void {
-    
-//   };
-// }
+  private filterAudioFoo(el: ISearchedAudio): boolean {
+		if (el?.type !== 'stream') {
+			return false;
+		}
+		if (el.isShort) {
+			return false;
+		}
+		if (el.duration > 1000) {
+			return false;
+		}
+		if (!el.title || !el.url) {
+			return false;
+		}
+
+		return true;
+	}
+}

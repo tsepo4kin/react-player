@@ -1,27 +1,23 @@
-import { AudioName, IAudio } from '../models/audio';
+// import { AudioName, IAudio } from '../models/audio';
 
-export abstract class AuidoActions {
-	public abstract getAuidos(): Promise<Array<IAudio>>;
+// TODO: Описать нормально
 
-	public abstract getCurrentAudio(audioId: UniqueId): Promise<IAudio>;
+// export abstract class AuidoActions {
+// 	public abstract getAuidos(): Promise<Array<IAudio>>;
 
-	public abstract setCurrentAudio(audioId: UniqueId): void;
+// 	public abstract getCurrentAudio(audioId: UniqueId): Promise<IAudio>;
 
-	public abstract searchAudio(searchString: AudioName): Promise<Array<IAudio>>;
+// 	public abstract setCurrentAudio(audioId: UniqueId): void;
 
-	public abstract addAudio(audio: IAudio): void;
+// 	public abstract searchAudio(searchString: AudioName): Promise<Array<IAudio>>;
 
-	public abstract deleteAudio(audioId: UniqueId): void;
+// 	public abstract addAudio(audio: IAudio): void;
 
-	// public abstract updateAudio(audioId: UniqueId): void;
-
-	// public abstract sortAudios(audioId: UniqueId): void;
-
-	// public abstract setAudioTag(audioId: UniqueId): void;
-}
+// 	public abstract deleteAudio(audioId: UniqueId): void;
+// }
 
 export class AudioSearchQuery {
-  constructor(public searchString: AudioName) {}
+  constructor(public searchString: string) {}
 }
 
 export class AudioDownloadQuery {
