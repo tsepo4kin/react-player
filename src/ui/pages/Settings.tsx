@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import MySwitch from '../components/mySwitch/mySwitch';
 import { useEffect, useState } from 'react';
 import { getReadableFileSizeString } from '../../infrastructure/controllers/storage.conrollers';
+import MyChip from '../components/myChip/myChip';
 
 const Settings = () => {
 	const [totalSize, setTotalSize] = useState('0');
@@ -20,9 +21,14 @@ const Settings = () => {
 	return (
 		<div className="h-full w-full px-8 py-2">
 			<div className="flex flex-col">
-				<div className="my-4">
-					<span className="pr-8 font-medium">Используемое пространство</span> -
-					<span className="text-green-700 pl-8">{totalSize}</span>
+				<div className="my-4 flex">
+					<span className="pr-8 font-medium">Используемое пространство</span>
+					<MyChip
+						className="block rounded-full"
+						variant="ghost"
+						color='green'
+						value={totalSize}
+					/>
 				</div>
 				{/* <p>Settings page description</p> */}
 				<MySwitch label="Dark mode" />

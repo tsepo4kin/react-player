@@ -4,9 +4,7 @@ import AudioItem from '../audioItem/audioItem';
 import { useDispatch, useSelector } from 'react-redux';
 import MySlider from '../../components/mySlider/mySlider';
 import Timeline from './timeline';
-import {
-	createMediaSession,
-} from '../../../infrastructure/controllers/player.controllers';
+import { createMediaSession } from '../../../infrastructure/controllers/player.controllers';
 import { SET_SELECTED_AUDIO_ID } from '../../../infrastructure/redux';
 import { arrayBufferToBlob } from '../../../utils/utils';
 import { LoopState } from '../../../domain/models/player';
@@ -123,7 +121,7 @@ const Player: FC = () => {
 	return (
 		<div className="border border-gray-400 rounded py-2 px-2">
 			{Boolean(playerState.audioElement) && (
-				<AudioItem hideButtons={true} song={playerState.audioElement} />
+				<AudioItem hideButtons={true} song={(playerState.audioElement) as HTMLAudioElement} />
 			)}
 
 			<Timeline

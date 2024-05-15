@@ -26,6 +26,8 @@ const App = () => {
 		<div className="app__wrapper">
 			<div className="app__container">
 				<div id="toasted__container" className="absolute w-full z-10"></div>
+				<div id="dialog__container" className="absolute w-full z-10"></div>
+
 				<Header></Header>
 
 				<Routes>
