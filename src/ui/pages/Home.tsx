@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import AudioItem from '../ui/widgets/audioItem/audioItem';
-import { SET_SELECTED_AUDIO_ID, SORT_SONGS } from '../redux';
+import AudioItem from '../widgets/audioItem/audioItem';
 import { useState } from 'react';
+import { SET_SELECTED_AUDIO_ID, SORT_SONGS } from '../../infrastructure/redux';
 
 const Home = () => {
 	const songs = useSelector((state: any) => state.songs);
@@ -54,9 +54,10 @@ const Home = () => {
 					<AudioItem
 						className={
 							idx === audioIdx
-								? 'border border-gray-600 rounded-lg py-2 px-2'
+								? 'bg-slate-500/25 rounded-lg py-2 px-2'
 								: 'py-2 px-2'
 						}
+						isActive={idx === audioIdx}
 						song={song}
 						key={idx}
 						idx={idx}

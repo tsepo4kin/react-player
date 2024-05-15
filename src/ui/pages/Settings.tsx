@@ -1,4 +1,4 @@
-import MySwitch from '../ui/components/mySwitch/mySwitch';
+import MySwitch from '../components/mySwitch/mySwitch';
 
 const Settings = () => {
 	return (
