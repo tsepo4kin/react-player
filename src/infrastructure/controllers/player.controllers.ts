@@ -1,23 +1,14 @@
-import { useState } from 'react';
 import { PlayerService } from '../../application/player.service';
-import { IPlayer, LoopState } from '../../domain/models/player';
+import { 	LoopState } from '../../domain/models/player';
 
 // TODO: ADD DI
 
-const playerController = new PlayerService({
+export const playerController = new PlayerService({
 	isPlayed: false,
 	isMuted: false,
 	volume: 0.5,
 	loopState: LoopState.LoopAll
 });
-
-export function usePlayer() {
-	const [playerState, setPlayerState] = useState<IPlayer>(
-		playerController.getPlayerData()
-	);
-
-	return { playerController, playerState, setPlayerState };
-}
 
 export function createMediaSession(goPrev: () => void, goNext: () => void) {
 	return function () {

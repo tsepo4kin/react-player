@@ -1,9 +1,29 @@
+import { useSelector } from 'react-redux';
 import MySwitch from '../components/mySwitch/mySwitch';
+import { useEffect, useState } from 'react';
+import { getReadableFileSizeString } from '../../infrastructure/controllers/storage.conrollers';
 
 const Settings = () => {
+	const [totalSize, setTotalSize] = useState('0');
+	const songs = useSelector((state: any) => state.songs);
+
+	useEffect(() => {
+		getTotalSize();
+	}, []);
+
+	const getTotalSize = () => {
+		let size = 0;
+		songs.forEach((s: { file: ArrayBuffer }) => (size += s.file.byteLength));
+		setTotalSize(getReadableFileSizeString(size));
+	};
+
 	return (
 		<div className="h-full w-full px-8 py-2">
 			<div className="flex flex-col">
+				<div className="my-4">
+					<span className="pr-8 font-medium">Используемое пространство</span> -
+					<span className="text-green-700 pl-8">{totalSize}</span>
+				</div>
 				{/* <p>Settings page description</p> */}
 				<MySwitch label="Dark mode" />
 

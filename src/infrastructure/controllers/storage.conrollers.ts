@@ -2,11 +2,6 @@ import localforage from 'localforage';
 import { createStore } from 'redux';
 import { reducers } from '../redux';
 
-localforage.config({
-	name: 'react-player',
-	storeName: 'react-player-store'
-});
-
 class DataStorage {
 	public static set = (key: string, value: any, callback?: any) => {
 		return localforage.setItem(key, value, callback);
@@ -22,6 +17,11 @@ class DataStorage {
 }
 
 export async function setupStorage() {
+	localforage.config({
+		name: 'react-player',
+		storeName: 'react-player-store'
+	});
+
 	let db: any;
 
 	try {
@@ -43,4 +43,15 @@ export async function setupStorage() {
 	});
 
 	return store;
+}
+
+export function getReadableFileSizeString(fileSizeInBytes: number) {
+  var i = -1;
+  var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+  do {
+    fileSizeInBytes /= 1024;
+    i++;
+  } while (fileSizeInBytes > 1024);
+
+  return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
 }

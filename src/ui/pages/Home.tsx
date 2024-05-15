@@ -1,18 +1,23 @@
 import { useDispatch, useSelector } from 'react-redux';
 import AudioItem from '../widgets/audioItem/audioItem';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SET_SELECTED_AUDIO_ID, SORT_SONGS } from '../../infrastructure/redux';
 
 const Home = () => {
 	const songs = useSelector((state: any) => state.songs);
-	const audioIdx = useSelector(
+	const selectedAudioId = useSelector(
 		(state: any) => state.currentAudio?.selectedAudioId
 	);
+	const [audioIdx, setAudioIdx] = useState<number>(selectedAudioId);
 	const dispatch = useDispatch();
 	const [draggedItem, setDraggedItem] = useState<null | Record<
 		string,
 		unknown
 	>>(null);
+
+	useEffect(() => {
+		setAudioIdx(selectedAudioId);
+	}, [selectedAudioId]);
 
 	const onSelectCurrentTrack = (idx: number) => {
 		if (audioIdx === null || idx !== audioIdx) {
@@ -25,14 +30,12 @@ const Home = () => {
 		e.dataTransfer.setData('text/plain', '');
 	};
 
-	const handleDragEnd = (e: any) => {
+	const handleDragEnd = () => {
 		setDraggedItem(null);
-		// e.target.style.border = 'none';
 	};
 
 	const handleDragOver = (e: any) => {
 		e.preventDefault();
-		// e.target.style.border = '2px dashed black';
 	};
 
 	const handleDrop = (targetItem: any) => {
@@ -40,26 +43,21 @@ const Home = () => {
 
 		const currentIndex = songs.indexOf(draggedItem);
 		const targetIndex = songs.indexOf(targetItem);
-		console.log(draggedItem);
 
 		if (currentIndex !== -1 && targetIndex !== -1) {
 			dispatch(SORT_SONGS(draggedItem.name as string, targetIndex));
+			setAudioIdx(targetIndex);
 		}
 	};
 
 	return (
 		<div className="h-full w-full px-2 py-2 overflow-y-scroll">
 			<div className="px-4">
-				{songs.map((song: unknown, idx: number) => (
+				{songs.map((song: { name: string }, idx: number) => (
 					<AudioItem
-						className={
-							idx === audioIdx
-								? 'bg-slate-500/25 rounded-lg py-2 px-2'
-								: 'py-2 px-2'
-						}
 						isActive={idx === audioIdx}
 						song={song}
-						key={idx}
+						key={song.name}
 						idx={idx}
 						canDelete={true}
 						onClick={() => onSelectCurrentTrack(idx)}

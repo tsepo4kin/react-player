@@ -6,11 +6,11 @@ import MySlider from '../../components/mySlider/mySlider';
 import Timeline from './timeline';
 import {
 	createMediaSession,
-	usePlayer
 } from '../../../infrastructure/controllers/player.controllers';
 import { SET_SELECTED_AUDIO_ID } from '../../../infrastructure/redux';
 import { arrayBufferToBlob } from '../../../utils/utils';
 import { LoopState } from '../../../domain/models/player';
+import { usePlayer } from '../../hooks/usePlayer';
 
 const Player: FC = () => {
 	const audioId = useSelector(
@@ -36,7 +36,9 @@ const Player: FC = () => {
 			const audio = { file: blob, name: songs[audioId].name };
 			audioRef.current!.title = audio.name;
 			audioRef.current!.src = URL.createObjectURL(audio.file);
-			audioRef.current!.addEventListener('playing', mediaSession);
+			// audioRef.current!.addEventListener('playing', mediaSession);
+			// window.addEventListener('playing', mediaSession);
+			mediaSession();
 			playerController.setAudioElement(audioRef.current!);
 			playerController.playPause(true);
 			setPlayerState({ ...playerController.getPlayerData() });
@@ -44,8 +46,9 @@ const Player: FC = () => {
 		}
 
 		return () => {
+			// window.removeEventListener('playing', mediaSession);
 			URL.revokeObjectURL(audioRef.current!.src);
-			audioRef.current!.removeEventListener('playing', mediaSession);
+			// audioRef.current!.removeEventListener('playing', mediaSession);
 		};
 	}, [audioId]);
 

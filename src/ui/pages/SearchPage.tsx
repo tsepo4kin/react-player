@@ -11,7 +11,8 @@ const SearchPage = () => {
 
 	const search = (searchString: string) => {
 		// TODO: проверить - чета дохуя запросов
-		audioService.searchAudio(searchString)
+		audioService
+			.searchAudio(searchString)
 			.then(res => setSongsData(res.slice(0, 6)))
 			.catch(e => console.log(e));
 	};
@@ -43,12 +44,7 @@ const SearchPage = () => {
 			{songsData.length > 0 && (
 				<div className="border border-gray-600 rounded-lg">
 					{songsData.map((song: any) => (
-						<AudioItem
-							className="py-2 px-2 w-full"
-							key={song.url}
-							song={song}
-							canDownload={true}
-						/>
+						<AudioItem key={song.url} song={song} canDownload={true} />
 					))}
 				</div>
 			)}

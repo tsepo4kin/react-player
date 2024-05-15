@@ -1,8 +1,6 @@
 import { FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-	blobToArrayBuffer,
-} from '../../../utils/utils';
+import { blobToArrayBuffer } from '../../../utils/utils';
 import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
 import showNotification from '../../components/myToast/myToast';
 import { ToastType } from '../../../infrastructure/controllers/notification.controllers';
@@ -12,7 +10,6 @@ import { audioService } from '../../../infrastructure/controllers/audioItem.cont
 interface IAudioItem {
 	song: any;
 	idx?: number;
-	className?: string;
 	canDelete?: boolean;
 	canDownload?: boolean;
 	hideButtons?: boolean;
@@ -28,7 +25,6 @@ interface IAudioItem {
 const AudioItem: FC<IAudioItem> = ({
 	song,
 	idx,
-	className,
 	canDelete = false,
 	canDownload = false,
 	hideButtons = false,
@@ -98,7 +94,9 @@ const AudioItem: FC<IAudioItem> = ({
 
 	return (
 		<div
-			className={`flex flex-col items-center ${className}`}
+			className={`flex flex-col items-center relative ${
+				isActive ? 'bg-slate-500/25 rounded-lg py-2 px-2' : 'py-2 px-2'
+			}`}
 			onClick={onClick}
 			draggable={draggable}
 			onDragStart={onDragStart}
