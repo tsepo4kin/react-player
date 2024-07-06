@@ -17,7 +17,7 @@
 // }
 
 export class AudioSearchQuery {
-  constructor(public searchString: string) {}
+	constructor(public searchString: string) {}
 }
 
 export class AudioDownloadQuery {
@@ -25,5 +25,9 @@ export class AudioDownloadQuery {
 }
 
 export class AudioMetadataQuery {
-	constructor(public youtubeId: string) {}
+	constructor(public youtubeId?: string, public fullUrl?: string) {}
+}
+
+export class YoutubeInfoQuery {
+	constructor(public id: string) {}
 }

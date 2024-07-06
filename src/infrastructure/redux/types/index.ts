@@ -2,4 +2,6 @@ export const T_ADD_SONGS = 'ADD_SONGS';
 export const T_DELETE_SONGS = 'DELETE_SONGS';
 export const T_SET_SELECTED_AUDIO_ID = 'SET_SELECTED_AUDIO_ID';
 export const T_CLEAR_SELECTED_AUDIO_ID = 'CLEAR_SELECTED_AUDIO_ID';
-export const T_SORT_SONGS = 'SORT_SONGS'
+export const T_SORT_SONGS = 'SORT_SONGS';
+export const T_SET_SETTINGS = 'SET_SETTINGS';
+export const T_INIT_AUDIO = 'INIT_AUDIO';

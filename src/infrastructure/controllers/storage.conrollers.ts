@@ -19,22 +19,23 @@ class DataStorage {
 export async function setupStorage() {
 	localforage.config({
 		name: 'react-player',
-		storeName: 'react-player-store'
+		storeName: 'react-player-store',
+		size: 2147483648
 	});
 
-	let db: any;
+	let audios: any;
 
 	try {
-		db = await DataStorage.get('state');
+		audios = await DataStorage.get('state');
 	} catch (e) {
 		console.log(e);
 	}
 
-	if (db === null) {
-		db = undefined;
+	if (audios === null) {
+		audios = undefined;
 	}
 
-	const store = createStore(reducers, db);
+	const store = createStore(reducers, audios);
 
 	store.subscribe(() => {
 		DataStorage.set('state', {
@@ -45,13 +46,21 @@ export async function setupStorage() {
 	return store;
 }
 
-export function getReadableFileSizeString(fileSizeInBytes: number) {
-  var i = -1;
-  var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
-  do {
-    fileSizeInBytes /= 1024;
-    i++;
-  } while (fileSizeInBytes > 1024);
+export function clearStorage() {
+	try {
+		DataStorage.delete('state');
+	} catch (e) {
+		console.log(e);
+	}
+}
 
-  return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
+export function getReadableFileSizeString(fileSizeInBytes: number) {
+	var i = -1;
+	var byteUnits = [' kB', ' MB', ' GB', ' TB', 'PB', 'EB', 'ZB', 'YB'];
+	do {
+		fileSizeInBytes /= 1024;
+		i++;
+	} while (fileSizeInBytes > 1024);
+
+	return Math.max(fileSizeInBytes, 0.1).toFixed(1) + byteUnits[i];
 }

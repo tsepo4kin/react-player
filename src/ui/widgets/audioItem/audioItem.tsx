@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { blobToArrayBuffer, formatTime } from '../../../utils/utils';
+import { arrayBufferToBlob, blobToArrayBuffer, formatTime } from '../../../utils/utils';
 import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
 import showNotification from '../../components/myToast/myToast';
 import { ToastType } from '../../../infrastructure/controllers/notification.controllers';
@@ -60,6 +60,34 @@ const AudioItem: FC<IAudioItem> = ({
 					saveOnDevice(idx);
 				}
 			}
+		},
+		{
+			text: 'Поделиться файлом',
+			disabled: false,
+			onClick: () => {
+				if (!navigator.canShare) {
+					console.log('navigator.canShare() not supported.');
+					return;
+				} else {
+					navigator.share({
+						files: [new File([arrayBufferToBlob((song as IAudio).file, 'audio/mp3')], 'audio.mp3', { type: 'audio/mp3' })],
+					});
+				}
+			}
+		},
+		{
+			text: 'Поделиться ссылкой',
+			disabled: false,
+			onClick: () => {
+				if (!navigator.canShare) {
+					console.log('navigator.canShare() not supported.');
+					return;
+				} else {
+					navigator.share({
+						url: 'https://youtube.com'+(song as IAudio).youtubeUrl,
+					});
+				}
+			}
 		}
 	];
 
@@ -82,7 +110,7 @@ const AudioItem: FC<IAudioItem> = ({
 
 	const saveInDatabase = async () => {
 		try {
-			const file = await audioService.getBlobFromUrl(
+			const { file } = await audioService.getBlobFromUrl(
 				(song as ISearchedAudio).url
 			);
 
@@ -90,7 +118,8 @@ const AudioItem: FC<IAudioItem> = ({
 				const arrayBuffer = await blobToArrayBuffer(file);
 				const trackInfo = {
 					file: arrayBuffer,
-					name: (song as ISearchedAudio).title
+					name: (song as ISearchedAudio).title,
+					youtubeUrl: (song as ISearchedAudio).url
 				};
 				dispatch(ADD_SONGS([trackInfo]));
 			}

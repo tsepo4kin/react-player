@@ -4,6 +4,7 @@ export interface IAudio {
 	file: StoregedAudio;
 	name: AudioName;
 	auidoId: UniqueId;
+	youtubeUrl: string;
 }
 
 // TODO: audiometadata, причесать интерфесы

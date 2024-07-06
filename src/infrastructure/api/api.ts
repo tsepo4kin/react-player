@@ -1,7 +1,9 @@
+import axios from 'axios';
 import {
 	AudioDownloadQuery,
 	AudioMetadataQuery,
-	AudioSearchQuery
+	AudioSearchQuery,
+	YoutubeInfoQuery
 } from '../../domain/actions/audio.actions';
 import {
 	IAudioMetadataResponse,
@@ -14,42 +16,49 @@ export class Actions {
 	async searchFromYoutube(
 		query: AudioSearchQuery
 	): Promise<ISearchedAudiosResult> {
-		const result = await fetch(
+		const { data } = await axios.get(
 			`https://pipedapi.kavin.rocks/search?q=${query.searchString}&filter=all`
-		)
-			.then(r => r.json())
-			.catch(e => console.log(e));
-		return result;
+		);
+		return data;
+	}
+
+	@Queryable(YoutubeInfoQuery) async getYoutubeInfo(query: YoutubeInfoQuery) {
+		const { data } = await axios.get(
+			`https://pipedapi.kavin.rocks/streams/${query.id}`
+		);
+		return data;
 	}
 
 	@Queryable(AudioMetadataQuery)
 	async getDownloadLink(
 		query: AudioMetadataQuery
 	): Promise<IAudioMetadataResponse> {
-		const result = await fetch('https://co.wuk.sh/api/json', {
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				url: `https://youtu.be/${query.youtubeId}`,
+		const { data } = await axios.post(
+			'https://co.wuk.sh/api/json',
+			{
+				url: query?.fullUrl
+					? query.fullUrl
+					: `https://youtu.be/${query.youtubeId}`,
 				isAudioOnly: true,
-				filenamePattern: 'basic'
-			})
-		})
-			.then(r => r.json())
-			.catch(e => console.log(e));
-		return result;
+				filenamePattern: 'pretty'
+			},
+			{
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
+				}
+			}
+		);
+
+		return data;
 	}
 
 	@Queryable(AudioDownloadQuery)
-	async downloadAudioFromURL(
-		query: AudioDownloadQuery
-	): Promise<Blob> {
-		const result = await fetch(query.url)
-			.then(r => r.blob())
-			// .catch(e => console.log(e));
-		return result;
+	async downloadAudioFromURL(query: AudioDownloadQuery): Promise<Blob> {
+		const { data } = await axios.get(query.url, {
+			responseType: 'blob'
+		});
+
+		return data;
 	}
 }

@@ -1,12 +1,9 @@
 import { FC, useEffect, useRef, useState } from 'react';
 import MyIconBtn from '../../components/myIconBtn/myIconBtn';
 import AudioItem from '../audioItem/audioItem';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import MySlider from '../../components/mySlider/mySlider';
 import Timeline from './timeline';
-import { createMediaSession } from '../../../infrastructure/controllers/player.controllers';
-import { SET_SELECTED_AUDIO_ID } from '../../../infrastructure/redux';
-import { arrayBufferToBlob } from '../../../utils/utils';
 import { LoopState } from '../../../domain/models/player';
 import { usePlayer } from '../../hooks/usePlayer';
 
@@ -15,55 +12,16 @@ const Player: FC = () => {
 		(state: any) => state.currentAudio?.selectedAudioId
 	);
 	const { playerController, playerState, setPlayerState } = usePlayer();
-	const songs = useSelector((state: any) => state.songs);
 	const [isIphone, setIsIphone] = useState(false);
-	const dispatch = useDispatch();
-	const audioRef = useRef<HTMLAudioElement | null>(new Audio());
 	const timer = useRef<number | undefined>();
-	const mediaSession = createMediaSession(onPrev, onNext);
 
 	useEffect(() => {
 		if (navigator.userAgent.includes('iPhone')) {
 			setIsIphone(true);
 		}
-		if (audioRef.current!.src) {
-			URL.revokeObjectURL(audioRef.current!.src);
-		}
-		if (audioId >= 0) {
-			const blob = arrayBufferToBlob(songs[audioId].file, 'audio/mp3');
-			const audio = { file: blob, name: songs[audioId].name };
-			audioRef.current!.title = audio.name;
-			audioRef.current!.src = URL.createObjectURL(audio.file);
-			// audioRef.current!.addEventListener('playing', mediaSession);
-			// window.addEventListener('playing', mediaSession);
-			mediaSession();
-			playerController.setAudioElement(audioRef.current!);
-			playerController.playPause(true);
-			setPlayerState({ ...playerController.getPlayerData() });
-			updateTime();
-		}
-
-		return () => {
-			// window.removeEventListener('playing', mediaSession);
-			URL.revokeObjectURL(audioRef.current!.src);
-			// audioRef.current!.removeEventListener('playing', mediaSession);
-		};
+		setPlayerState({ ...playerController.getPlayerData() });
+		updateTime();
 	}, [audioId]);
-
-	function onNext() {
-		if (audioId < songs.length - 1) {
-			dispatch(SET_SELECTED_AUDIO_ID(audioId + 1));
-		} else if (audioId === songs.length - 1 && playerState.loopState === 1) {
-			dispatch(SET_SELECTED_AUDIO_ID(0));
-		}
-	}
-
-	function onPrev() {
-		// TODO: single click - play from start, double click - play prev audio
-		if (audioId > 0) {
-			dispatch(SET_SELECTED_AUDIO_ID(audioId - 1));
-		}
-	}
 
 	const playPause = () => {
 		playerController.playPause();
@@ -83,7 +41,8 @@ const Player: FC = () => {
 	};
 
 	const rewind = (timeString: string) => {
-		const range = (audioRef.current!.duration / 100) * parseFloat(timeString);
+		const range =
+			(playerState.audioElement!.duration / 100) * parseFloat(timeString);
 		if (!isNaN(range)) {
 			playerController.setCurrentTime(range);
 			setPlayerState({ ...playerController.getPlayerData() });
@@ -93,14 +52,6 @@ const Player: FC = () => {
 	const onVolumeChange = (volumeString: string) => {
 		playerController.changeVolume(volumeString);
 		setPlayerState({ ...playerController.getPlayerData() });
-	};
-
-	const onSongEnd = () => {
-		if (playerState.loopState === LoopState.LoopOne) {
-			audioRef.current?.play();
-		} else {
-			onNext();
-		}
 	};
 
 	const setLoopState = () => {
@@ -119,16 +70,21 @@ const Player: FC = () => {
 	};
 
 	return (
-		<div className="border border-gray-400 rounded py-2 px-2">
+		<div className="w-full bg-neutral-300 rounded py-2 px-2 mt-auto">
 			{Boolean(playerState.audioElement) && (
-				<AudioItem hideButtons={true} song={(playerState.audioElement) as HTMLAudioElement} />
+				<AudioItem
+					hideButtons={true}
+					song={playerState.audioElement as HTMLAudioElement}
+				/>
 			)}
 
 			<Timeline
 				duration={playerState.audioElement?.duration || 0}
 				currentTime={playerState.audioElement?.currentTime || 0}
 				disabled={!playerState.audioElement}
-				onChange={e => rewind(e.target.value)}
+				onChange={e => {
+					rewind(e.target.value);
+				}}
 			/>
 
 			<div className="flex justify-center">
@@ -144,7 +100,11 @@ const Player: FC = () => {
 					</MyIconBtn>
 				</div>
 
-				<MyIconBtn size="sm" variant="outlined" onClick={onPrev}>
+				<MyIconBtn
+					size="sm"
+					variant="outlined"
+					onClick={() => playerController.goPrev()}
+				>
 					<i className="fa-solid fa-backward" />
 				</MyIconBtn>
 
@@ -161,7 +121,11 @@ const Player: FC = () => {
 					)}
 				</MyIconBtn>
 
-				<MyIconBtn size="sm" variant="outlined" onClick={onNext}>
+				<MyIconBtn
+					size="sm"
+					variant="outlined"
+					onClick={() => playerController.goNext()}
+				>
 					<i className="fa-solid fa-forward" />
 				</MyIconBtn>
 
@@ -189,8 +153,6 @@ const Player: FC = () => {
 					)}
 				</div>
 			</div>
-
-			<audio hidden controls ref={audioRef} onEnded={() => onSongEnd()} />
 		</div>
 	);
 };

@@ -4,6 +4,7 @@ import SearchPage from '../pages/SearchPage';
 import Settings from '../pages/Settings';
 import Header from '../widgets/header/header';
 import Footer from '../widgets/footer/footer';
+import PlayerPage from '../pages/PlayerPage';
 
 const App = () => {
 	const router = [
@@ -19,6 +20,10 @@ const App = () => {
 		{
 			path: '/settings',
 			element: <Settings />
+		},
+		{
+			path: '/player',
+			element: <PlayerPage />
 		}
 	];
 

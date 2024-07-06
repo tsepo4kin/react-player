@@ -1,7 +1,8 @@
 import {
 	AudioDownloadQuery,
 	AudioMetadataQuery,
-	AudioSearchQuery
+	AudioSearchQuery,
+	YoutubeInfoQuery
 } from '../domain/actions/audio.actions';
 import {
 	AudioName,
@@ -27,8 +28,27 @@ export class AudioService {
 		return result.items.filter(this.filterAudioFoo);
 	}
 
-	public async getBlobFromUrl(url: string): Promise<Blob | void> {
-		const youtubeId = url.replace('/watch?v=', '');
+	public async getBlobFromUrl(
+		url: string,
+		fromFullUrl?: boolean
+	): Promise<{ file: Blob; title: string }> {
+		let youtubeId = '';
+		if (!fromFullUrl) {
+			youtubeId = url.replace(/.*\/watch\?v=/gi, '');
+		} else {
+			const urlObj = new URL(url);
+			if (urlObj.searchParams.get('v')) {
+				youtubeId = urlObj.searchParams.get('v') as string;
+			} else {
+				youtubeId = urlObj.pathname.replace('/', '');
+			}
+		}
+
+		const { title } = await this.httpClient.request<
+			YoutubeInfoQuery,
+			{ title: string }
+		>(new YoutubeInfoQuery(youtubeId));
+
 		const metaData = await this.httpClient.request<
 			AudioMetadataQuery,
 			IAudioMetadataResponse
@@ -38,12 +58,11 @@ export class AudioService {
 			new AudioDownloadQuery(metaData.url)
 		);
 
-		if (audioBlob) {
-			const file = new File([audioBlob], '', {
-				type: 'audio/mp3'
-			});
-			return file;
-		}
+		const file = new File([audioBlob], title, {
+			type: 'audio/mp3'
+		});
+	
+		return { file, title };
 	}
 
 	public download(audio: { file: ArrayBuffer; name: string }) {

@@ -10,6 +10,9 @@ export class PlayerService extends PlayerActions {
 
 	private playerData: IPlayer;
 
+	public goNext(): void {}
+	public goPrev(): void {}
+
 	public playPause(setPlaying?: boolean): void {
 		if (!this.playerData.audioElement) return;
 
@@ -70,5 +73,19 @@ export class PlayerService extends PlayerActions {
 
 	public getPlayerData(): IPlayer {
 		return this.playerData;
+	}
+
+	public setOnEnd(cb: () => void) {
+		if (!this.playerData.audioElement) return;
+
+		this.playerData.audioElement.onended = cb;
+	}
+
+	public setNext(cb: () => void) {
+		this.goNext = cb;
+	}
+
+	public setPrev(cb: () => void) {
+		this.goPrev = cb;
 	}
 }

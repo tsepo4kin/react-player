@@ -53,6 +53,14 @@ const vitePWA = VitePWA({
 				sizes: '512x512',
 				type: 'image/png'
 			}
+		],
+		file_handlers: [
+			{
+				"action": "/handle-audio-file",
+				"accept": {
+					"audio/*": [".mp3"]
+				}
+			}
 		]
 	}
 });

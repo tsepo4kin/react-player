@@ -25,7 +25,7 @@ const Timeline: FC<ITimlineProps> = ({
 	}, [currentTime, duration]);
 
 	return (
-		<div className="w-full flex px-1">
+		<div className="w-full flex px-1 mt-2 mb-6">
 			<span className="whitespace-nowrap">{formatTime(currentTime)}</span>
 			<MySlider
 				className="w-full mx-2"

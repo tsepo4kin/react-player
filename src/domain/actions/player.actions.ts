@@ -14,4 +14,8 @@ export abstract class PlayerActions {
 	public abstract setCurrentTime(time: number): void;
 
 	public abstract getPlayerData(): IPlayer;
+
+	public abstract goNext(): void;
+
+	public abstract goPrev(): void;
 }

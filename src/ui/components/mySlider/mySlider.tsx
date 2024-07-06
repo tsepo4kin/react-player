@@ -22,6 +22,7 @@ const mySlider: FC<ISliderProps> = ({
 			max={100}
 			value={value}
 			onChange={onChange}
+			onTouchMove={onChange}
 		/>
 	);
 };

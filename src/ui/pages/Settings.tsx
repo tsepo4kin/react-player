@@ -1,8 +1,12 @@
 import { useSelector } from 'react-redux';
 import MySwitch from '../components/mySwitch/mySwitch';
 import { useEffect, useState } from 'react';
-import { getReadableFileSizeString } from '../../infrastructure/controllers/storage.conrollers';
+import {
+	clearStorage,
+	getReadableFileSizeString
+} from '../../infrastructure/controllers/storage.conrollers';
 import MyChip from '../components/myChip/myChip';
+import MyButton from '../components/myButton/myButton';
 
 const Settings = () => {
 	const [totalSize, setTotalSize] = useState('0');
@@ -18,6 +22,21 @@ const Settings = () => {
 		setTotalSize(getReadableFileSizeString(size));
 	};
 
+	const clear = () => {
+		const isConfirm = confirm(
+			'Вы действительно хотите удалить все аудиозаписи?'
+		);
+		if (isConfirm) {
+			clearStorage();
+		}
+	};
+
+	const test = async () => {
+		console.log('start');
+		const root = await navigator.storage.getDirectory();
+		console.log(root);
+	};
+
 	return (
 		<div className="h-full w-full px-8 py-2">
 			<div className="flex flex-col">
@@ -26,7 +45,7 @@ const Settings = () => {
 					<MyChip
 						className="block rounded-full"
 						variant="ghost"
-						color='green'
+						color="green"
 						value={totalSize}
 					/>
 				</div>
@@ -42,6 +61,14 @@ const Settings = () => {
 				</a>
 
 				{/* <a href="#">bug report</a> */}
+
+				{/* <MyButton className="mt-4" onClick={() => clear()} size="sm">
+					Удалить всю аудио библиотеку
+				</MyButton> */}
+
+				<MyButton className="mt-4" onClick={() => test()} size="sm">
+					tst
+				</MyButton>
 			</div>
 		</div>
 	);
