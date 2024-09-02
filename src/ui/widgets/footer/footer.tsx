@@ -25,7 +25,7 @@ const Footer: FC = () => {
 	);
 	const songs = useSelector((state: any) => state.songs);
 	const audioRef = useRef<HTMLAudioElement>(new Audio());
-	const mediaSession = createMediaSession(onPrev, onNext);
+	const {createSession, clearSession} = createMediaSession(onPrev, onNext);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -36,8 +36,8 @@ const Footer: FC = () => {
 			audioRef.current!.src = URL.createObjectURL(audio.file);
 			playerController.setAudioElement(audioRef.current!);
 			playerController.playPause(true);
-			mediaSession();
-			playerController.setOnEnd(onSongEnd);
+			createSession();
+			playerController.setOnEnd(onSongEnd.bind(this)); // ???
 			playerController.setNext(onNext);
 			playerController.setPrev(onPrev);
 		}
@@ -45,8 +45,7 @@ const Footer: FC = () => {
 			if (audioRef?.current?.src) {
 				URL.revokeObjectURL(audioRef.current.src);
 			}
-			// window.removeEventListener('playing', mediaSession);
-			// audioRef.current!.removeEventListener('playing', mediaSession);
+			clearSession();
 		};
 	}, [audioId, audioRef]);
 
@@ -62,8 +61,9 @@ const Footer: FC = () => {
 	}
 
 	function onPrev() {
-		// TODO: single click - play from start, double click - play prev audio
-		if (audioId > 0) {
+		if (playerController.getPlayerData().audioElement!.currentTime > 3) {
+			playerController.setCurrentTime(0);
+		} else if (audioId > 0) {
 			dispatch(SET_SELECTED_AUDIO_ID(audioId - 1));
 		}
 	}

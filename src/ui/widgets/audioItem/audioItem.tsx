@@ -1,6 +1,10 @@
 import { FC, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { arrayBufferToBlob, blobToArrayBuffer, formatTime } from '../../../utils/utils';
+import {
+	arrayBufferToBlob,
+	blobToArrayBuffer,
+	formatTime
+} from '../../../utils/utils';
 import { ADD_SONGS, DELETE_SONG } from '../../../infrastructure/redux';
 import showNotification from '../../components/myToast/myToast';
 import { ToastType } from '../../../infrastructure/controllers/notification.controllers';
@@ -70,25 +74,31 @@ const AudioItem: FC<IAudioItem> = ({
 					return;
 				} else {
 					navigator.share({
-						files: [new File([arrayBufferToBlob((song as IAudio).file, 'audio/mp3')], 'audio.mp3', { type: 'audio/mp3' })],
+						files: [
+							new File(
+								[arrayBufferToBlob((song as IAudio).file, 'audio/mp3')],
+								(song as IAudio).name,
+								{ type: 'audio/mp3' }
+							)
+						]
 					});
 				}
 			}
 		},
-		{
-			text: 'Поделиться ссылкой',
-			disabled: false,
-			onClick: () => {
-				if (!navigator.canShare) {
-					console.log('navigator.canShare() not supported.');
-					return;
-				} else {
-					navigator.share({
-						url: 'https://youtube.com'+(song as IAudio).youtubeUrl,
-					});
-				}
-			}
-		}
+		// {
+		// 	text: 'Поделиться ссылкой',
+		// 	disabled: false,
+		// 	onClick: () => {
+		// 		if (!navigator.canShare) {
+		// 			console.log('navigator.canShare() not supported.');
+		// 			return;
+		// 		} else {
+		// 			navigator.share({
+		// 				url: 'https://youtube.com' + (song as IAudio).youtubeUrl
+		// 			});
+		// 		}
+		// 	}
+		// }
 	];
 
 	const searchedAudios = [

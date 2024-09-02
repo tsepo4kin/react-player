@@ -11,25 +11,34 @@ export const playerController = new PlayerService({
 });
 
 export function createMediaSession(goPrev: () => void, goNext: () => void) {
-	return function () {
-		if ('mediaSession' in navigator) {
-			navigator.mediaSession.setActionHandler('previoustrack', goPrev);
+	return {
+		createSession: () => {
+			if ('mediaSession' in navigator) {
+				navigator.mediaSession.setActionHandler('previoustrack', goPrev);
 
-			navigator.mediaSession.setActionHandler('nexttrack', goNext);
+				navigator.mediaSession.setActionHandler('nexttrack', goNext);
 
-			navigator.mediaSession.setActionHandler('play', () => {
-				playerController.playPause(true);
-			});
+				navigator.mediaSession.setActionHandler('play', () => {
+					playerController.playPause(true);
+				});
 
-			navigator.mediaSession.setActionHandler('pause', () => {
-				playerController.playPause(false);
-			});
+				navigator.mediaSession.setActionHandler('pause', () => {
+					playerController.playPause(false);
+				});
 
-			navigator.mediaSession.setActionHandler('seekto', details => {
-				if (!details.seekTime) return;
+				navigator.mediaSession.setActionHandler('seekto', details => {
+					if (!details.seekTime) return;
 
-				playerController.setCurrentTime(details.seekTime);
-			});
+					playerController.setCurrentTime(details.seekTime);
+				});
+			}
+		},
+		clearSession: () => {
+			navigator.mediaSession.setActionHandler('previoustrack', null);
+			navigator.mediaSession.setActionHandler('nexttrack', null);
+			navigator.mediaSession.setActionHandler('play', null);
+			navigator.mediaSession.setActionHandler('pause', null);
+			navigator.mediaSession.setActionHandler('seekto', null);
 		}
 	};
 }

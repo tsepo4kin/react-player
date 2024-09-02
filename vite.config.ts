@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from 'tailwindcss';
 import { VitePWA } from 'vite-plugin-pwa';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 // https://vitejs.dev/config/
 
@@ -56,16 +57,16 @@ const vitePWA = VitePWA({
 		],
 		file_handlers: [
 			{
-				"action": "/handle-audio-file",
-				"accept": {
-					"audio/*": [".mp3"]
+				action: '/handle-audio-file',
+				accept: {
+					'audio/*': ['.mp3']
 				}
 			}
 		]
 	}
 });
 export default defineConfig({
-	plugins: [react(), vitePWA],
+	plugins: [react(), vitePWA, basicSsl()],
 	css: {
 		postcss: {
 			plugins: [tailwindcss()]
